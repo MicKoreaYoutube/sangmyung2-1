@@ -93,7 +93,7 @@ export default function Page() {
       </div>
       <div className="bg-foreground py-12">
         <section className="container items-center md:py-10">
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-4">
             <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-center text-3xl font-extrabold leading-tight tracking-tighter text-background lg:text-5xl`}
             >
               <InView triggerOnce={true} threshold={1}>
@@ -102,9 +102,9 @@ export default function Page() {
                 )}
               </InView>
             </h1>
-            <InView triggerOnce={true} threshold={1} delay={2000}>
+            <InView triggerOnce={true} threshold={1}>
               {({ inView, ref }) => (
-                <div ref={ref} className={`font-TheJamsil5Bold animate__animated flex flex-col md:flex-row gap-4 ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                <div ref={ref} className={`font-TheJamsil5Bold animate__animated flex flex-col gap-4 md:flex-row ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
                   <Link
                     href={siteConfig.links.shadcnuiDocs}
                     target="_blank"
