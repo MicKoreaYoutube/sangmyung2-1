@@ -7,6 +7,24 @@ import { InView } from "react-intersection-observer"
 import { siteConfig } from "@/config/site"
 
 import { buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export default function Page() {
 
@@ -14,151 +32,135 @@ export default function Page() {
 
   return (
     <>
-      <div className="bg-background">
-        <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-          <div className="flex flex-col items-start gap-2">
-            <InView triggerOnce={true} threshold={1}>
-              {({ inView, ref, entry }) => (
-                <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl ${inView ? classToAdd : 'invisible'}`}
-                  ref={ref}>
-                  Beautifully designed components <br className="hidden sm:inline" />
-                  built with Radix UI and Tailwind CSS.
-                </h1>
+      <div className="bg-foreground py-12">
+        <section className="container items-center md:py-10">
+          <div className="flex flex-col items-center gap-2">
+            <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-center text-3xl font-extrabold leading-tight tracking-tighter text-background lg:text-5xl`}
+            >
+              안녕하세요. 이곳은 <br />
+              <InView triggerOnce={true} threshold={1} delay={1600}>
+                {({ inView, ref }) => (
+                  <span ref={ref} className={`animate__animated ${inView ? 'animate__fadeInUp' : 'invisible'}`}>상명중학교 2학년 1반 건의함 사이트 입니다.</span>
+                )}
+              </InView>
+            </h1>
+            <InView triggerOnce={true} threshold={1} delay={2300}>
+              {({ inView, ref }) => (
+                <p ref={ref} className={`font-SUITE-Regular animate__animated text-center text-lg text-muted-foreground ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                  상명중학교 2학년 1반은 여러분의 건의로 완성됩니다. 언제나 편하게 건의해주세요!
+                </p>
               )}
             </InView>
-            <p className=" font-SUITE-Regular text-lg text-muted-foreground">
-              Accessible and customizable components that you can copy and paste
-              into your apps. Free. Open Source. And Next.js 13 Ready.
-            </p>
-          </div>
-          <div className="font-TheJamsil5Bold flex gap-4">
-            <Link
-              href={siteConfig.links.shadcnuiDocs}
-              target="_blank"
-              rel="noreferrer"
-              className={buttonVariants()}
-            >
-              Documentation
-            </Link>
-            <Link
-              target="_blank"
-              rel="noreferrer"
-              href={siteConfig.links.micGithub}
-              className={buttonVariants({ variant: "outline" })}
-            >
-              GitHub
-            </Link>
-          </div>
-        </section>
-      </div>
-      <div className="bg-foreground">
-        <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-          <div className="flex flex-col items-start gap-2">
-            <InView triggerOnce={true} threshold={1}>
-              {({ inView, ref, entry }) => (
-                <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter text-background md:text-4xl ${inView ? classToAdd : 'invisible'}`}
-                  ref={ref}>
-                  Beautifully designed components <br className="hidden sm:inline" />
-                  built with Radix UI and Tailwind CSS.
-                </h1>
-              )}
-            </InView>
-            <p className="font-SUITE-Regular text-lg text-muted-foreground">
-              Accessible and customizable components that you can copy and paste
-              into your apps. Free. Open Source. And Next.js 13 Ready.
-            </p>
-          </div>
-          <div className="font-TheJamsil5Bold flex gap-4">
-            <Link
-              href={siteConfig.links.shadcnuiDocs}
-              target="_blank"
-              rel="noreferrer"
-              className={buttonVariants({ variant: "defaultDark" })}
-            >
-              Documentation
-            </Link>
-            <Link
-              target="_blank"
-              rel="noreferrer"
-              href={siteConfig.links.micGithub}
-              className={buttonVariants({ variant: "outlineDark" })}
-            >
-              GitHub
-            </Link>
           </div>
         </section>
       </div>
       <div className="bg-background">
-        <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-          <div className="flex flex-col items-start gap-2">
+        <section className="container grid items-center gap-4 py-10">
+          <div className="flex flex-col items-start">
             <InView triggerOnce={true} threshold={1}>
-              {({ inView, ref, entry }) => (
-                <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter md:text-4xl ${inView ? classToAdd : 'invisible'}`}
+              {({ inView, ref }) => (
+                <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter lg:text-5xl ${inView ? classToAdd : 'invisible'}`}
                   ref={ref}>
-                  Beautifully designed components <br className="hidden sm:inline" />
-                  built with Radix UI and Tailwind CSS.
+                  최근 건의 사항
                 </h1>
               )}
             </InView>
-            <p className=" font-SUITE-Regular text-lg text-muted-foreground">
-              Accessible and customizable components that you can copy and paste
-              into your apps. Free. Open Source. And Next.js 13 Ready.
-            </p>
+            <InView triggerOnce={true} threshold={1} delay={2300}>
+              {({ inView, ref }) => (
+                <p ref={ref} className={`font-SUITE-Regular animate__animated text-lg text-muted-foreground ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                  최근에 올라온 건의 사항들을 확인하세요!
+                </p>
+              )}
+            </InView>
           </div>
-          <div className="font-TheJamsil5Bold flex gap-4">
-            <Link
-              href={siteConfig.links.shadcnuiDocs}
-              target="_blank"
-              rel="noreferrer"
-              className={buttonVariants()}
-            >
-              Documentation
-            </Link>
-            <Link
-              target="_blank"
-              rel="noreferrer"
-              href={siteConfig.links.micGithub}
-              className={buttonVariants({ variant: "outline" })}
-            >
-              GitHub
-            </Link>
+          <div className="grid gap-4">
+            {[0, 1, 2].map(
+              (item) => (
+                <InView triggerOnce={true} threshold={1} key={item}>
+                  {({ inView, ref }) => (
+                    <Card className={`animate__animated w-full ${inView ? "animate__fadeInUp" : "invisible"}`} ref={ref}>
+                      <CardHeader>
+                        <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">건의사항 {item}</CardTitle>
+                        <CardDescription className="font-SUITE-Regular text-xl">내용 {item}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  )}
+                </InView>
+              )
+            )}
           </div>
         </section>
       </div>
-      <div className="bg-foreground">
-        <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
-          <div className="flex flex-col items-start gap-2">
+      <div className="bg-foreground py-12">
+        <section className="container items-center md:py-10">
+          <div className="flex flex-col items-center gap-2">
+            <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-center text-3xl font-extrabold leading-tight tracking-tighter text-background lg:text-5xl`}
+            >
+              <InView triggerOnce={true} threshold={1}>
+                {({ inView, ref }) => (
+                  <span ref={ref} className={`animate__animated ${inView ? 'animate__fadeInUp' : 'invisible'}`}>직접 건의하고 싶나요?</span>
+                )}
+              </InView>
+            </h1>
+            <InView triggerOnce={true} threshold={1} delay={2000}>
+              {({ inView, ref }) => (
+                <div ref={ref} className={`font-TheJamsil5Bold animate__animated flex flex-col md:flex-row gap-4 ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                  <Link
+                    href={siteConfig.links.shadcnuiDocs}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={buttonVariants({ variant: "defaultDark" })}
+                  >
+                    건의 사항 작성하기
+                  </Link>
+                  <Link
+                    target="_blank"
+                    rel="noreferrer"
+                    href={siteConfig.links.micGithub}
+                    className={buttonVariants({ variant: "outlineDark" })}
+                  >
+                    내가 쓴 건의 사항 확인하기
+                  </Link>
+                </div>
+              )}
+            </InView>
+          </div>
+        </section>
+      </div>
+      <div className="bg-background">
+        <section className="container grid items-center gap-4 py-10">
+          <div className="flex flex-col items-start">
             <InView triggerOnce={true} threshold={1}>
-              {({ inView, ref, entry }) => (
-                <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter text-background md:text-4xl ${inView ? classToAdd : 'invisible'}`}
+              {({ inView, ref }) => (
+                <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter lg:text-5xl ${inView ? classToAdd : 'invisible'}`}
                   ref={ref}>
-                  Beautifully designed components <br className="hidden sm:inline" />
-                  built with Radix UI and Tailwind CSS.
+                  최근에 올라온 공지
                 </h1>
               )}
             </InView>
-            <p className="font-SUITE-Regular text-lg text-muted-foreground">
-              Accessible and customizable components that you can copy and paste
-              into your apps. Free. Open Source. And Next.js 13 Ready.
-            </p>
+            <InView triggerOnce={true} threshold={1} delay={2300}>
+              {({ inView, ref }) => (
+                <p ref={ref} className={`font-SUITE-Regular animate__animated text-lg text-muted-foreground ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                  최근에 올라온 공지들도 확인하세요!
+                </p>
+              )}
+            </InView>
           </div>
-          <div className="font-TheJamsil5Bold flex gap-4">
-            <Link
-              href={siteConfig.links.shadcnuiDocs}
-              target="_blank"
-              rel="noreferrer"
-              className={buttonVariants({ variant: "defaultDark" })}
-            >
-              Documentation
-            </Link>
-            <Link
-              target="_blank"
-              rel="noreferrer"
-              href={siteConfig.links.micGithub}
-              className={buttonVariants({ variant: "outlineDark" })}
-            >
-              GitHub
-            </Link>
+          <div className="grid gap-4">
+            {[0, 1, 2].map(
+              (item) => (
+                <InView triggerOnce={true} threshold={1} key={item}>
+                  {({ inView, ref }) => (
+                    <Card className={`animate__animated w-full ${inView ? "animate__fadeInUp" : "invisible"}`} ref={ref}>
+                      <CardHeader>
+                        <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">공지 {item}</CardTitle>
+                        <CardDescription className="font-SUITE-Regular text-xl">내용 {item}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  )}
+                </InView>
+              )
+            )}
           </div>
         </section>
       </div>

@@ -39,7 +39,7 @@ export function SiteFooter() {
               <Icons.logo className="h-6 w-6" />
               <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">{siteConfig.name}</span>
             </Link>
-            <p className="mt-4 max-w-[400px] text-muted-foreground">
+            <p className="mt-4 max-w-[350px] text-muted-foreground">
               {siteConfig.description}
             </p>
           </div>
@@ -73,26 +73,6 @@ export function SiteFooter() {
           <div className="sm:flex sm:items-center sm:justify-between">
             <span className="text-sm text-muted-foreground sm:text-center">© 2023 <Link href="/" className="hover:underline">{siteConfig.name}™</Link>. All Rights Reserved.</span>
             <nav className="hidden items-center space-x-1 md:flex">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline">패밀리 서비스&nbsp;<FontAwesomeIcon icon={faChevronDown} className={`h-3 w-3 shrink-0 transition-transform duration-200 ${FamilySurviceRefInView ? "rotate-180" : null}`} /></Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="font-RixInooAriDuriR w-1" ref={FamilySurviceRef}>
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>패밀리 서비스</DropdownMenuLabel>
-                    {siteConfig.FamilySurvice?.length ? (
-                      siteConfig.FamilySurvice?.map(
-                        (item, index) =>
-                          <Link key={index} href={item.href}>
-                            <DropdownMenuItem>
-                              <span>{item.name}</span>
-                            </DropdownMenuItem>
-                          </Link>
-                      )
-                    ) : null}
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
               <Link
                 href={siteConfig.links.micGithub}
                 target="_blank"

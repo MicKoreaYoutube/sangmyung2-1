@@ -1,9 +1,9 @@
 export type SiteConfig = typeof siteConfig
 
 const siteConfig = {
-  name: "Next.js Template",
+  name: "상명중 2-1 건의함",
   description:
-    "A nextjs template by MicKoreaYoutube based on shadcn-ui",
+    "상명중학교 2학년 1반은 여러분의 건의로 완성됩니다. 언제나 편하게 건의해주세요!",
   mainNav: [
     {
       title: "Home",
@@ -15,112 +15,75 @@ const siteConfig = {
       },
       linkList: [
         {
-          title: "11번 링크",
-          description: "11번 설명",
+          title: "공지사항",
           href: "/11"
         },
         {
-          title: "12번 링크",
-          description: "12번 설명",
+          title: "이용약관",
           href: "/12"
         },
         {
-          title: "13번 링크",
-          description: "13번 설명",
+          title: "릴리스 노트",
           href: "/13"
         },
       ]
     },
     {
-      title: "dashboard",
+      title: "건의함",
       linkList: [
         {
-          title: "Dashboard Home",
-          description: "/dashboard",
-          href: "/dashboard"
+          title: "건의 사항 목록 확인",
+          href: "/suggestions"
         },
         {
-          title: "22번 링크",
-          description: "22번 설명",
-          href: "/22"
+          title: "건의 사항 작성하기",
+          href: "/suggestions/create"
         },
         {
-          title: "23번 링크",
-          description: "23번 설명",
-          href: "/23"
-        },
-        {
-          title: "24번 링크",
-          description: "24번 설명",
-          href: "/24"
-        },
-        {
-          title: "25번 링크",
-          description: "25번 설명",
-          href: "/25"
-        },
-        {
-          title: "26번 링크",
-          description: "26번 설명",
-          href: "/26"
-        },
+          title: "내가 올린 건의 사항",
+          href: "/아몰라나중에ㅋ"
+        }
       ]
     },
     {
-      title: "documenation",
-      href: "/docs"
+      title: "문의하기",
+      href: "/muneui"
     }
   ],
   footerContent: [
     {
-      title: "1번줄",
+      title: "법 관련",
       content: [
         {
-          title: "1번 내용",
+          title: "이용 약관",
           href: "/11"
         },
-        {
-          title: "2번 내용",
-          href: "/12"
-        },
-        {
-          title: "3번 내용",
-          href: "/13"
-        }
       ]
     },
     {
-      title: "2번줄",
+      title: "게시판",
       content: [
         {
-          title: "1번 내용",
+          title: "건의함",
           href: "/21"
         },
         {
-          title: "2번 내용",
+          title: "공지사항",
           href: "/22"
-        },
-        {
-          title: "3번 내용",
-          href: "/23"
         }
       ]
     },
     {
-      title: "3번줄",
+      title: "개발",
       content: [
         {
-          title: "1번 내용",
+          title: "깃허브",
           href: "/31"
         },
         {
-          title: "2번 내용",
+          title: "릴리스 노트",
           href: "/32"
         },
-        {
-          title: "3번 내용",
-          href: "/33"
-        }
       ]
     },
   ],
