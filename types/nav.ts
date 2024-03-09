@@ -4,12 +4,12 @@ export interface NavItem {
   mainLink?: {
     logo?: boolean
     title: string
-    description: string
+    description?: string
     href?: string
   }
   linkList?: Array<{
     title: string
-    description: string
+    description?: string
     href: string
   }>
 }
