@@ -71,7 +71,7 @@ export function SiteFooter() {
         <div>
           <hr className="my-6 border-gray-200 dark:border-gray-700 sm:mx-auto lg:my-8" />
           <div className="sm:flex sm:items-center sm:justify-between">
-            <span className="text-sm text-muted-foreground sm:text-center">© 2023 <Link href="/" className="hover:underline">{siteConfig.name}™</Link>. All Rights Reserved.</span>
+            <span className="text-sm text-muted-foreground sm:text-center">© {new Date().getFullYear()} <Link href="/" className="hover:underline">{siteConfig.name}™</Link>. All Rights Reserved.</span>
             <nav className="hidden items-center space-x-1 md:flex">
               <Link
                 href={siteConfig.links.micGithub}

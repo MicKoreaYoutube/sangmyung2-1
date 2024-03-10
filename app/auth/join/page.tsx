@@ -54,6 +54,7 @@ export default function Join() {
     pwd: z.string().regex(new RegExp("^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$"), {
       message: "영문, 숫자, 특수기호 조합으로 8~15글자 비밀번호를 만들어주세요."
     }),
+    pwdCheck: z.literal(inputRef.current[1]?.value),
     StudentID: z.string().regex(new RegExp("^(?:201)[0-9]{2}[가-힣]{2,4}"), {
       message: "학번이 올바르지 않습니다."
     })
@@ -77,15 +78,15 @@ export default function Join() {
         </div>
         <div className="font-SUITE-Regular flex flex-col justify-center space-y-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(join)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(join)} className="space-y-3">
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>이메일*</FormLabel>
                     <FormControl>
-                      <Input placeholder="example@example.com" {...field} />
+                      <Input placeholder="example@example.com" {...field} ref={el => (inputRef.current[0] = el)}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -96,9 +97,35 @@ export default function Join() {
                 name="pwd"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>pwd</FormLabel>
+                    <FormLabel>비밀번호*</FormLabel>
                     <FormControl>
-                      <Input placeholder="영문, 숫자, 특수기호 조합으로 8~15글자 비밀번호를 만들어주세요." {...field} />
+                      <Input placeholder="영문, 숫자, 특수기호 조합으로 8~15글자" {...field} ref={el => (inputRef.current[1] = el)}/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="pwdCheck"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>비밀번호 확인*</FormLabel>
+                    <FormControl>
+                      <Input placeholder="비밀 번호를 다시 써주세요" {...field} ref={el => (inputRef.current[2] = el)}/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="StudentID"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>학번*</FormLabel>
+                    <FormControl>
+                      <Input placeholder="본인의 학번을 써주세요." {...field} ref={el => (inputRef.current[3] = el)}/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -107,22 +134,6 @@ export default function Join() {
               <Button type="submit">Submit</Button>
             </form>
           </Form>
-          <div>
-            <Label htmlFor="email" className="p-1">이메일</Label>
-            <Input placeholder="이메일를 입력하세요." ref={el => (inputRef.current[0] = el)} required />
-          </div>
-          <div>
-            <Label htmlFor="pwd" className="p-1">비밀번호</Label>
-            <Input placeholder="비밀번호를 입력하세요." type="password" ref={el => (inputRef.current[1] = el)} required />
-          </div>
-          <div>
-            <Label htmlFor="pwdCheck" className="p-1">비밀번호 확인</Label>
-            <Input placeholder="비밀번호를 다시 입력하세요." type="password" ref={el => (inputRef.current[2] = el)} required />
-          </div>
-          <div>
-            <Label htmlFor="studentID" className="p-1">학번</Label>
-            <Input placeholder="학번을 입력하세요." ref={el => (inputRef.current[3] = el)} required />
-          </div>
         </div>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
