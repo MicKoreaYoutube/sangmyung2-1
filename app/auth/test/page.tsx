@@ -22,7 +22,9 @@ const FormSchema = z.object({
   username: z.string().email().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-  pwd: z.string().regex(new RegExp("^(?:201)[0-9]{2}[가-힣]{2,4}"), {message: "형식이 올바르지 않습니다."})
+  pwd: z.string().regex(new RegExp("^(?:201)[0-9]{2}[가-힣]{2,4}"), { 
+    message: "형식이 올바르지 않습니다." 
+  })
 })
 
 export default function InputForm() {

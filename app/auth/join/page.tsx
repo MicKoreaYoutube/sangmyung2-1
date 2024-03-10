@@ -11,7 +11,6 @@ import { siteConfig } from "@/config/site"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Progress } from "@/components/ui/progress"
 import {
   Tabs,
   TabsContent,
@@ -26,6 +25,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -39,14 +47,24 @@ export default function Join() {
 
   const inputRef = useRef<Array<HTMLInputElement | null>>([])
 
-  function join() {
-    console.log(inputRef.current[0]?.value)
-    const joinSchema = {
-      email: /[A-Za-z0-9]+@[A-Za-z0-9]+\.[A-Za-z0-9]+/i,
-      pwd: /^[a-zA-Z0-9!^#%&*()_+{}\[\]:;<>,.?~\\-]+$/,
-      StudentID: /^201\d{2}[가-힣]{2,4}$/
-    }
+  const joinFormSchema = z.object({
+    email: z.string().email({
+      message: "이메일 형식이 올바르지 않습니다."
+    }),
+    pwd: z.string().regex(new RegExp("^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$"), {
+      message: "영문, 숫자, 특수기호 조합으로 8~15글자 비밀번호를 만들어주세요."
+    }),
+    StudentID: z.string().regex(new RegExp("^(?:201)[0-9]{2}[가-힣]{2,4}"), {
+      message: "학번이 올바르지 않습니다."
+    })
+  })
 
+  const form = useForm<z.infer<typeof joinFormSchema>>({
+    resolver: zodResolver(joinFormSchema)
+  })
+
+  function join(data: z.infer<typeof joinFormSchema>) {
+    console.log("Succes!")
   }
 
   return (
@@ -58,27 +76,53 @@ export default function Join() {
           </h1>
         </div>
         <div className="font-SUITE-Regular flex flex-col justify-center space-y-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(join)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="example@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="pwd"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>pwd</FormLabel>
+                    <FormControl>
+                      <Input placeholder="영문, 숫자, 특수기호 조합으로 8~15글자 비밀번호를 만들어주세요." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+            </form>
+          </Form>
           <div>
             <Label htmlFor="email" className="p-1">이메일</Label>
             <Input placeholder="이메일를 입력하세요." ref={el => (inputRef.current[0] = el)} required />
-            <Label htmlFor="studentID" className="hidden p-1">에러</Label>
           </div>
           <div>
             <Label htmlFor="pwd" className="p-1">비밀번호</Label>
             <Input placeholder="비밀번호를 입력하세요." type="password" ref={el => (inputRef.current[1] = el)} required />
-            <Label htmlFor="studentID" className="hidden p-1">에러</Label>
           </div>
           <div>
             <Label htmlFor="pwdCheck" className="p-1">비밀번호 확인</Label>
             <Input placeholder="비밀번호를 다시 입력하세요." type="password" ref={el => (inputRef.current[2] = el)} required />
-            <Label htmlFor="studentID" className="hidden p-1">에러</Label>
           </div>
           <div>
             <Label htmlFor="studentID" className="p-1">학번</Label>
             <Input placeholder="학번을 입력하세요." ref={el => (inputRef.current[3] = el)} required />
-            <Label htmlFor="studentID" className="hidden p-1">에러</Label>
           </div>
-          <Button onClick={join}>가입하기</Button>
         </div>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
