@@ -56,7 +56,7 @@ export default function Page() {
       </div>
       <div className="bg-background">
         <section className="container grid items-center gap-4 py-10">
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start gap-2">
             <InView triggerOnce={true} threshold={1}>
               {({ inView, ref }) => (
                 <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter lg:text-5xl ${inView ? classToAdd : 'invisible'}`}
@@ -129,7 +129,7 @@ export default function Page() {
       </div>
       <div className="bg-background">
         <section className="container grid items-center gap-4 py-10">
-          <div className="flex flex-col items-start">
+          <div className="flex flex-col items-start gap-2">
             <InView triggerOnce={true} threshold={1}>
               {({ inView, ref }) => (
                 <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-3xl font-extrabold leading-tight tracking-tighter lg:text-5xl ${inView ? classToAdd : 'invisible'}`}

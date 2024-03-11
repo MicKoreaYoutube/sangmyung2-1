@@ -13,7 +13,7 @@ interface AuthLayoutProps {
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
     <>
-      <div className="flex h-full w-full justify-between lg:h-[94vh]">
+      <div className="flex min-h-screen w-full justify-between">
         <div className="hidden basis-1/2 flex-col justify-between bg-primary p-12 dark:bg-accent lg:flex">
           <span className="font-KBO-Dia-Gothic_bold flex text-lg font-medium text-white">
             <Icons.logo className="h-7 w-7" />
