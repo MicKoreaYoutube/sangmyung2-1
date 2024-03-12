@@ -24,7 +24,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             {siteConfig.description}
           </span>
         </div>
-        <div className="flex h-full basis-full flex-col justify-start p-8 lg:basis-1/2 lg:justify-center">
+        <div className="flex min-h-full basis-full flex-col justify-start p-8 lg:basis-1/2 lg:justify-center">
           {children}
         </div>
       </div>

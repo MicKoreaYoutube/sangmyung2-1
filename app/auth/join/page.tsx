@@ -1,7 +1,8 @@
 'use client'
 
 import Link from "next/link"
-import { useState, useRef, RefObject } from "react"
+import { useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect } from "react"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faCheck } from "@fortawesome/free-solid-svg-icons"
@@ -48,16 +49,18 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import VerEx from "verbal-expressions"
 
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebase/initialization"
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
+import { auth, db } from "@/firebase/initialization"
 
 export default function Join() {
 
-  const [joinState, joinStateChanger] = useState(1)
-  const [error, setError] = useState({isError: false, errorCode: "", errorMessage: ""})
+  const params = useSearchParams()
+
+  const [joinState, joinStateChanger] = useState(0)
+  const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
   const inputRef = useRef<Array<HTMLInputElement | null>>([])
-  const alertRef = useRef<HTMLDivElement>(null)
 
   const joinFormSchema = z.object({
     email: z.string({
@@ -91,19 +94,23 @@ export default function Join() {
 
   function join(data: z.infer<typeof joinFormSchema>) {
     createUserWithEmailAndPassword(auth, data.email, data.pwd)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user
         joinStateChanger(1)
+        await setDoc(doc(db, "users", user.uid), {
+          role: "student",
+          studentID: data.StudentID,
+        })
+        sendEmailVerification(user)
       })
       .catch((error) => {
         const errorCode = error.code
         const errorMessage = error.message
-        setError({isError: true, errorCode: errorCode, errorMessage: errorMessage})
+        setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
         setTimeout(() => {
-          setError({isError: false, errorCode: "", errorMessage: ""})
+          setError({ isError: false, errorCode: "", errorMessage: "" })
         }, 3000);
       })
-
   }
 
   return (
@@ -115,10 +122,10 @@ export default function Join() {
           </h1>
         </div>
         <div className="font-SUITE-Regular flex flex-col justify-center space-y-6">
-          <Progress value={((joinState + 1) / 3) * 100} />
+          <Progress value={(joinState / 2) * 100} />
           <div className={joinState == 0 ? "" : "hidden"}>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(join)} className="space-y-3">
+              <form onSubmit={form.handleSubmit(join)} className="space-y-5">
                 <FormField
                   control={form.control}
                   name="email"
@@ -182,27 +189,50 @@ export default function Join() {
               </form>
             </Form>
           </div>
-          <div className={`flex flex-col items-center ${joinState == 1 ? "" : "hidden"}`}>
-            <FontAwesomeIcon icon={faEnvelope} className="text-9xl"/>
+          <div className={`flex flex-col items-center gap-3 ${joinState == 1 ? "" : "hidden"}`}>
+            <FontAwesomeIcon icon={faEnvelope} className="text-9xl" />
             <span className="text-2xl">이메일을 확인해주세요.</span>
+            <div className="flex flex-row gap-2">
+              <span className="text-md py-2 text-muted-foreground">인증 메일이 도착하지 않았다면?</span>
+              <Button>다시 받기</Button>
+            </div>
+            <div className="flex flex-row gap-2">
+              <span className="text-md py-2 text-muted-foreground">만약 인증 했다면?</span>
+              <Button>건의하러 가기</Button>
+            </div>
+          </div>
+          <div className={`flex flex-col items-center gap-3 ${joinState == 2 ? "" : "hidden"}`}>
+            <FontAwesomeIcon icon={faCheck} className="text-9xl" />
+            <span className="text-2xl">축하합니다! 가입에 성공하셨습니다!</span>
+            <Button className="w-full" asChild>
+              <Link href="/suggestions">
+                건의하러 가기
+              </Link>
+            </Button>
           </div>
         </div>
-        <div className={`relative ${joinState != 0 ? "hidden" : ""}`}>
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
-          </div>
-          <div className="font-SUITE-Regular relative flex justify-center">
-            <span className="bg-background px-2 text-muted-foreground">
-              또는
-            </span>
-          </div>
-        </div>
-        <div className={`flex justify-between ${joinState != 0 ? "hidden" : ""}`}>
-          <Button variant="ghost" size="icon"><FontAwesomeIcon icon={faGoogle} className="text-lg font-bold text-[#4285f4]" /></Button>
-          <Button variant="ghost" size="icon"><span className="text-xl font-bold text-[#03c75a]">N</span></Button>
-          <Button variant="ghost" size="icon"><FontAwesomeIcon icon={faGithub} className="text-lg font-bold" /></Button>
-          <Button variant="ghost" size="icon"><FontAwesomeIcon icon={faApple} className="text-lg font-bold" /></Button>
-        </div>
+        {joinState != 0 ? (
+          <hr />
+        ) : (
+          <>
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="font-SUITE-Regular relative flex justify-center">
+                <span className="bg-background px-2 text-muted-foreground">
+                  또는
+                </span>
+              </div>
+            </div>
+            <div className="flex justify-between">
+              <Button variant="ghost" size="icon"><FontAwesomeIcon icon={faGoogle} className="text-lg font-bold text-[#4285f4]" /></Button>
+              <Button variant="ghost" size="icon"><span className="text-xl font-bold text-[#03c75a]">N</span></Button>
+              <Button variant="ghost" size="icon"><FontAwesomeIcon icon={faGithub} className="text-lg font-bold" /></Button>
+              <Button variant="ghost" size="icon"><FontAwesomeIcon icon={faApple} className="text-lg font-bold" /></Button>
+            </div>
+          </>
+        )}
         <div className="font-SUITE-Regular flex flex-col justify-center space-y-6">
           <span className="px-8 text-center text-sm text-muted-foreground">계정이 이미 있나요? <Link href="/auth/login" className="text-blue-500 hover:text-blue-700">로그인→</Link></span>
           <p className="px-8 text-center text-sm text-muted-foreground">
