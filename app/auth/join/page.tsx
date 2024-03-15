@@ -49,13 +49,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import VerEx from "verbal-expressions"
 
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, onAuthStateChanged } from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
 import { auth, db } from "@/firebase/initialization"
 
 export default function Join() {
-
-  const params = useSearchParams()
 
   const [joinState, joinStateChanger] = useState(0)
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
@@ -98,10 +96,22 @@ export default function Join() {
         const user = userCredential.user
         joinStateChanger(1)
         await setDoc(doc(db, "users", user.uid), {
-          role: "student",
-          studentID: data.StudentID,
+          role: "student"
         })
-        sendEmailVerification(user)
+        if (auth.currentUser) {
+          updateProfile(auth.currentUser, {
+            displayName: data.StudentID
+          }).then(() => {
+            sendEmailVerification(user)
+          }).catch((error) => {
+            const errorCode = error.code
+            const errorMessage = error.message
+            setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
+            setTimeout(() => {
+              setError({ isError: false, errorCode: "", errorMessage: "" })
+            }, 3000)
+          })
+        }
       })
       .catch((error) => {
         const errorCode = error.code
@@ -109,9 +119,28 @@ export default function Join() {
         setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
         setTimeout(() => {
           setError({ isError: false, errorCode: "", errorMessage: "" })
-        }, 3000);
+        }, 3000)
       })
   }
+
+  const [emailVerified, setEmailVerified] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setEmailVerified(user.emailVerified)
+      }
+    })
+
+    return () => unsubscribe()
+  })
+
+  useEffect(() => {
+    if (emailVerified) {
+      joinStateChanger(2)
+      console.log("리렌더링", emailVerified)
+    }
+  }, [emailVerified])
 
   return (
     <>
@@ -194,11 +223,13 @@ export default function Join() {
             <span className="text-2xl">이메일을 확인해주세요.</span>
             <div className="flex flex-row gap-2">
               <span className="text-md py-2 text-muted-foreground">인증 메일이 도착하지 않았다면?</span>
-              <Button>다시 받기</Button>
+              <Button onClick={() => {
+                if (auth.currentUser) sendEmailVerification(auth.currentUser)
+              }}>다시 받기</Button>
             </div>
             <div className="flex flex-row gap-2">
               <span className="text-md py-2 text-muted-foreground">만약 인증 했다면?</span>
-              <Button>건의하러 가기</Button>
+              <Button onClick={() => { history.go(0) }}>클릭</Button>
             </div>
           </div>
           <div className={`flex flex-col items-center gap-3 ${joinState == 2 ? "" : "hidden"}`}>

@@ -35,6 +35,8 @@ import { MainNav } from "@/components/main-nav"
 import { NavDropDown } from "@/components/dropdown"
 import { NavSheet } from "@/components/nav-sheet"
 
+import { auth } from "@/firebase/initialization"
+
 export function SiteHeader() {
 
   const [open, setOpen] = useState(false)
@@ -59,12 +61,12 @@ export function SiteHeader() {
   // const fuse = new fuseAPI(data)
 
   return (
-    <header className="font-RixInooAriDuriR text-lg sticky top-0 z-40 w-full bg-accent/50 backdrop-blur-sm">
+    <header className="font-RixInooAriDuriR sticky top-0 z-40 w-full bg-accent/50 text-lg backdrop-blur-sm">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <MainNav items={siteConfig.mainNav} />
         <div className="hidden flex-1 items-center justify-end space-x-4 md:flex">
           {/* <SearchDialog /> */}
-          <NavDropDown items={navDropDownContent}/>
+          <NavDropDown items={navDropDownContent} label={auth.currentUser?.displayName} />
         </div>
         <div className="flex flex-1 items-center justify-end md:hidden">
           <NavSheet items={siteConfig.mainNav} />

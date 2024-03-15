@@ -257,101 +257,49 @@ export const navDropDownContent: dropDownItem = {
   content: [
     [
       {
-        icon: ["fas", "house"],
-        title: "11번 내용",
-        href: "/11",
+        icon: ["fas", "box-archive"],
+        title: "건의함",
+        href: "/board/suggestions",
         shortcut: ""
       },
       {
-        icon: ["fas", "house"],
-        title: "12번 내용",
-        href: "/12",
+        icon: ["fas", "message"],
+        title: "건의하기",
+        href: "/board/suggestions/create",
         shortcut: ""
       },
       {
-        icon: ["fas", "house"],
-        title: "13번 내용",
-        href: "/13",
+        icon: ["fas", "file"],
+        title: "내가 쓴 건의사항",
+        href: "/dashboard/my-suggestions",
         shortcut: ""
       }
     ],
     [
       {
-        icon: ["fas", "house"],
-        title: "21번 내용",
-        href: "/21",
+        icon: ["fas", "table-columns"],
+        title: "대시보드",
+        href: "/dashboard",
         shortcut: ""
       },
       {
-        icon: ["fas", "house"],
-        title: "22번 내용",
-        href: "/22",
-        shortcut: "",
-        semiDropDown: [
-          [
-            {
-              icon: ["fas", "house"],
-              title: "22-1번 내용",
-              href: "/22-1",
-              shortcut: ""
-            }
-          ],
-          [
-            {
-              icon: ["fas", "house"],
-              title: "22-21번 내용",
-              href: "/22-21",
-              shortcut: ""
-            },
-            {
-              icon: ["fas", "house"],
-              title: "22-22번 내용",
-              href: "/22-22",
-              shortcut: ""
-            }
-          ],
-          [
-            {
-              icon: ["fas", "house"],
-              title: "22-23번 내용",
-              href: "/22-23",
-              shortcut: ""
-            }
-          ]
-        ]
+        icon: ["fas", "circle-info"],
+        title: "내 정보",
+        href: "/dashboard/information",
+        shortcut: ""
       },
       {
-        icon: ["fas", "house"],
-        title: "23번 내용",
-        href: "/23",
+        icon: ["fas", "lock"],
+        title: "비밀번호 수정",
+        href: "/dashboard/change-pwd",
         shortcut: ""
       }
     ],
     [
       {
-        icon: ["fas", "house"],
-        title: "31번 내용",
-        href: "/31",
-        shortcut: ""
-      },
-      {
-        icon: ["fas", "house"],
-        title: "32번 내용",
-        href: "/32",
-        shortcut: ""
-      },
-      {
-        icon: ["fas", "house"],
-        title: "33번 내용",
-        href: "/33",
-        shortcut: ""
-      }
-    ],
-    [
-      {
-        icon: ["fas", "house"],
+        icon: ["fas", "right-from-bracket"],
         title: "로그아웃",
-        href: "/4",
+        href: "/auth/logout",
         shortcut: ""
       }
     ]

@@ -5,28 +5,6 @@ import { useState } from "react"
 import Link from "next/link"
 
 import { TriangleDownIcon } from "@radix-ui/react-icons"
-import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-  Calculator,
-  Calendar,
-  Smile,
-  Menu,
-  Search,
-  LogIn
-} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -59,15 +37,29 @@ import { faRightToBracket } from '@fortawesome/free-solid-svg-icons'
 
 import { dropDownItem } from "@/types/dropdown"
 
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "@/firebase/initialization"
+
 interface dropDownProps {
   items?: dropDownItem
+  label?: string | null
 }
 
-export function NavDropDown({ items }: dropDownProps) {
+export function NavDropDown({ items, label }: dropDownProps) {
 
   const [isLogin, changeLoginState] = useState(false)
 
   library.add(fas, far, fab)
+
+  onAuthStateChanged(auth, (user)=>{
+    if (user) {
+      changeLoginState(true)
+      console.log("user is logined")
+    } else {
+      changeLoginState(false)
+      console.log("no user is logined")
+    }
+  })
 
   return (
     <>
@@ -88,7 +80,7 @@ export function NavDropDown({ items }: dropDownProps) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>{items?.label}</DropdownMenuLabel>
+              <DropdownMenuLabel>{label}</DropdownMenuLabel>
               {items?.content.length ? (
                 <>
                   {items.content.map((item, index) => (
