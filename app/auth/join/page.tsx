@@ -36,7 +36,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -96,7 +95,7 @@ export default function Join() {
         const user = userCredential.user
         joinStateChanger(1)
         await setDoc(doc(db, "users", user.uid), {
-          role: "student"
+          role: "일반 학생"
         })
         if (auth.currentUser) {
           updateProfile(auth.currentUser, {
@@ -208,13 +207,15 @@ export default function Join() {
                     </FormItem>
                   )}
                 />
-                <Alert variant="destructive" className={error.isError ? "" : "hidden"}>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>{error.errorCode}</AlertTitle>
-                  <AlertDescription>
-                    {error.errorMessage}
-                  </AlertDescription>
-                </Alert>
+                {error.isError ? (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>{error.errorCode}</AlertTitle>
+                    <AlertDescription>
+                      {error.errorMessage}
+                    </AlertDescription>
+                  </Alert>
+                ) : null}
                 <Button type="submit" className="w-full">가입하기</Button>
               </form>
             </Form>

@@ -32,16 +32,29 @@ const siteConfig = {
       title: "건의함",
       linkList: [
         {
-          title: "건의 사항 목록 확인",
+          title: "건의함 홈",
           href: "/suggestions"
         },
         {
-          title: "건의 사항 작성하기",
+          title: "작성하기",
           href: "/suggestions/create"
         },
         {
           title: "내가 올린 건의 사항",
-          href: "/아몰라나중에ㅋ"
+          href: "/dashboard/my/suggestions"
+        }
+      ]
+    },
+    {
+      title: "대시보드",
+      linkList: [
+        {
+          title: "대시보드",
+          href: "/dashboard"
+        },
+        {
+          title: "내 정보",
+          href: "/suggestions/create"
         }
       ]
     },
@@ -185,7 +198,6 @@ if (siteConfig.mainNav[0].mainLink) {
 
 import { dashboardSidebarItem } from "@/types/sidebar"
 import { dropDownItem } from "@/types/dropdown"
-import { string } from "zod"
 
 export const dashboardSidebarContent: dashboardSidebarItem[] = [
   {
@@ -194,62 +206,26 @@ export const dashboardSidebarContent: dashboardSidebarItem[] = [
     href: "/dashboard"
   },
   {
-    title: "2번줄",
+    icon: ["fas", "circle-info"],
+    title: "내 정보",
     content: [
       {
-        title: "21번 내용",
-        href: "/21"
+        icon: ["fas", "person"],
+        title: "개인 정보",
+        href: "/dashboard/my/information"
       },
       {
-        icon: ["far", "circle-check"],
-        title: "22번 내용",
-        href: "/22"
+        icon: ["fas", "file"],
+        title: "내가 쓴 건의사항",
+        href: "/dashboard/my/suggestions"
       },
       {
-        title: "23번 내용",
-        href: "/23"
-      }
+        icon: ["fas", "lock"],
+        title: "비밀번호 수정",
+        href: "/dashboard/my/change-pwd"
+      },
     ]
-  },
-  {
-    title: "3번줄",
-    content: [
-      {
-        title: "31번 내용",
-        href: "/31"
-      },
-      {
-        title: "32번 내용",
-        href: "/32"
-      },
-      {
-        title: "33번 내용",
-        href: "/33"
-      }
-    ]
-  },
-  {
-    title: "4번줄",
-    href: "/4",
-    shortcut: ""
-  },
-  {
-    title: "5번줄",
-    content: [
-      {
-        title: "51번 내용",
-        href: "/51"
-      },
-      {
-        title: "52번 내용",
-        href: "/52"
-      },
-      {
-        title: "53번 내용",
-        href: "/53"
-      }
-    ]
-  },
+  }
 ]
 
 export const navDropDownContent: dropDownItem = {
