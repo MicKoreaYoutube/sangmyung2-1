@@ -69,22 +69,17 @@ export default function MyChangePwd() {
   })
 
   function changePwd(data: z.infer<typeof joinFormSchema>) {
+    console.log(1)
     onAuthStateChanged(auth, (user) => {
+      console.log(2, [user, user?.email])
       if (user && user.email) {
+        console.log(3)
         signInWithEmailAndPassword(auth, user.email, data.pwd)
           .then(() => {
             updatePassword(user, data.newPwd).then(() => {
-              signOut(auth).then(() => {
-                redirect("/auth/login")
-              }).catch((error) => {
-                const errorCode = error.code
-                const errorMessage = error.message
-                setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
-                setTimeout(() => {
-                  setError({ isError: false, errorCode: "", errorMessage: "" })
-                }, 3000)
-              });
+              redirect("/auth/logout")
             }).catch((error) => {
+              console.log(4)
               const errorCode = error.code
               const errorMessage = error.message
               setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
@@ -94,6 +89,7 @@ export default function MyChangePwd() {
             })
           })
           .catch((error) => {
+            console.log(5)
             const errorCode = error.code
             const errorMessage = error.message
             setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
@@ -103,7 +99,6 @@ export default function MyChangePwd() {
           })
       }
     })
-
   }
 
   return (
