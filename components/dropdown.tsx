@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import Link from "next/link"
 
@@ -37,29 +37,32 @@ import { faRightToBracket } from '@fortawesome/free-solid-svg-icons'
 
 import { dropDownItem } from "@/types/dropdown"
 
-import { onAuthStateChanged } from "firebase/auth"
+import { User, onAuthStateChanged } from "firebase/auth"
 import { auth } from "@/firebase/initialization"
 
 interface dropDownProps {
   items?: dropDownItem
-  label?: string | null
 }
 
-export function NavDropDown({ items, label }: dropDownProps) {
+export function NavDropDown({ items }: dropDownProps) {
 
   const [isLogin, changeLoginState] = useState(false)
+  const [loginedUser, setLoginedUser] = useState<User>()
 
   library.add(fas, far, fab)
 
-  onAuthStateChanged(auth, (user)=>{
-    if (user) {
-      changeLoginState(true)
-      console.log("user is logined")
-    } else {
-      changeLoginState(false)
-      console.log("no user is logined")
-    }
-  })
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        changeLoginState(true)
+        setLoginedUser(user)
+      } else {
+        changeLoginState(false)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
 
   return (
     <>
@@ -70,7 +73,7 @@ export function NavDropDown({ items, label }: dropDownProps) {
               <button>
                 <div className="flex">
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                    <AvatarImage src={loginedUser?.photoURL?.toString()} alt="@shadcn" />
                     <AvatarFallback>
                       <LoadingComp />
                     </AvatarFallback>
@@ -80,7 +83,7 @@ export function NavDropDown({ items, label }: dropDownProps) {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>{label}</DropdownMenuLabel>
+              <DropdownMenuLabel>{auth.currentUser?.displayName}</DropdownMenuLabel>
               {items?.content.length ? (
                 <>
                   {items.content.map((item, index) => (

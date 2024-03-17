@@ -100,7 +100,8 @@ export default function Join() {
         })
         if (auth.currentUser) {
           updateProfile(auth.currentUser, {
-            displayName: data.StudentID
+            displayName: data.StudentID,
+            photoURL: "https://firebasestorage.googleapis.com/v0/b/sangmyung2-1.appspot.com/o/userPhoto.png?alt=media&token=9fc81f53-e883-42f9-b046-3aa9d23a51ce"
           }).then(() => {
             sendEmailVerification(user)
           }).catch((error) => {
@@ -129,18 +130,18 @@ export default function Join() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setEmailVerified(user.emailVerified)
+        if (emailVerified) {
+          joinStateChanger(2)
+        } else {
+          joinStateChanger(1)
+        }
+      } else {
+        joinStateChanger(0)
       }
     })
 
     return () => unsubscribe()
   })
-
-  useEffect(() => {
-    if (emailVerified) {
-      joinStateChanger(2)
-      console.log("리렌더링", emailVerified)
-    }
-  }, [emailVerified])
 
   return (
     <>

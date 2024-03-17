@@ -89,8 +89,6 @@ import { NavDropDown } from "@/components/dropdown"
 
 import { useInView } from "react-intersection-observer"
 
-import { auth } from "@/firebase/initialization"
-
 interface NavSheetProps {
   items?: NavItem[]
 }
@@ -182,7 +180,7 @@ export function NavSheet({ items }: NavSheetProps) {
           <SheetFooter>
             <div className="flex flex-col">
               <div className="flex flex-row justify-between gap-5">
-                <NavDropDown items={navDropDownContent} label={auth.currentUser?.displayName} />
+                <NavDropDown items={navDropDownContent} />
                 <nav className="flex flex-col space-x-1 sm:flex-row">
                   <div>
                     <Link

@@ -66,7 +66,7 @@ export function SiteHeader() {
         <MainNav items={siteConfig.mainNav} />
         <div className="hidden flex-1 items-center justify-end space-x-4 md:flex">
           {/* <SearchDialog /> */}
-          <NavDropDown items={navDropDownContent} label={auth.currentUser?.displayName} />
+          <NavDropDown items={navDropDownContent} />
         </div>
         <div className="flex flex-1 items-center justify-end md:hidden">
           <NavSheet items={siteConfig.mainNav} />
