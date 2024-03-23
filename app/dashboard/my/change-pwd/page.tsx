@@ -1,6 +1,6 @@
 'use client'
 
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import { useState, useRef } from "react"
 
@@ -39,6 +39,8 @@ import { auth } from "@/firebase/initialization"
 
 export default function MyChangePwd() {
 
+  const router = useRouter()
+
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
   const inputRef = useRef<Array<HTMLInputElement | null>>([])
@@ -69,17 +71,13 @@ export default function MyChangePwd() {
   })
 
   function changePwd(data: z.infer<typeof joinFormSchema>) {
-    console.log(1)
     onAuthStateChanged(auth, (user) => {
-      console.log(2, [user, user?.email])
       if (user && user.email) {
-        console.log(3)
         signInWithEmailAndPassword(auth, user.email, data.pwd)
           .then(() => {
             updatePassword(user, data.newPwd).then(() => {
-              redirect("/auth/logout")
+              router.push("/auth/logout")
             }).catch((error) => {
-              console.log(4)
               const errorCode = error.code
               const errorMessage = error.message
               setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
@@ -89,7 +87,6 @@ export default function MyChangePwd() {
             })
           })
           .catch((error) => {
-            console.log(5)
             const errorCode = error.code
             const errorMessage = error.message
             setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })

@@ -56,7 +56,7 @@ export default function Join() {
   const [joinState, joinStateChanger] = useState(0)
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
-  const inputRef = useRef<Array<HTMLInputElement | null>>([])
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const joinFormSchema = z.object({
     email: z.string({
@@ -69,7 +69,7 @@ export default function Join() {
     }).regex(new RegExp("^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$"), {
       message: "영문, 숫자, 특수기호 조합으로 8~15글자 비밀번호를 만들어주세요."
     }),
-    pwdCheck: z.literal(inputRef.current[1]?.value, {
+    pwdCheck: z.literal(inputRef.current?.value, {
       errorMap: () => ({
         message: "비밀번호가 일치하지 않습니다."
       })
@@ -161,7 +161,7 @@ export default function Join() {
                     <FormItem>
                       <FormLabel>이메일*</FormLabel>
                       <FormControl>
-                        <Input placeholder="example@example.com" {...field} ref={el => (inputRef.current[0] = el)} />
+                        <Input placeholder="example@example.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -174,7 +174,7 @@ export default function Join() {
                     <FormItem>
                       <FormLabel>비밀번호*</FormLabel>
                       <FormControl>
-                        <Input placeholder="영문, 숫자, 특수기호 조합으로 8~15글자" {...field} ref={el => (inputRef.current[1] = el)} type="password" />
+                        <Input placeholder="영문, 숫자, 특수기호 조합으로 8~15글자" {...field} type="password" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -187,7 +187,7 @@ export default function Join() {
                     <FormItem>
                       <FormLabel>비밀번호 확인*</FormLabel>
                       <FormControl>
-                        <Input placeholder="비밀 번호를 다시 써주세요" {...field} ref={el => (inputRef.current[2] = el)} type="password" />
+                        <Input placeholder="비밀 번호를 다시 써주세요" {...field} ref={inputRef} type="password" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -200,7 +200,7 @@ export default function Join() {
                     <FormItem>
                       <FormLabel>학번*</FormLabel>
                       <FormControl>
-                        <Input placeholder="본인의 학번을 써주세요." {...field} ref={el => (inputRef.current[3] = el)} />
+                        <Input placeholder="본인의 학번을 써주세요." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

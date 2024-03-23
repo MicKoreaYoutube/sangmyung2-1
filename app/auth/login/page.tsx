@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 import { useState, useRef, useEffect } from "react"
 
@@ -33,6 +33,8 @@ import { auth } from "@/firebase/initialization"
 
 export default function Login() {
 
+  const router = useRouter()
+
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
   const inputRef = useRef<Array<HTMLInputElement | null>>([])
@@ -57,7 +59,7 @@ export default function Login() {
   async function login(data: z.infer<typeof loginFormSchema>) {
     await signInWithEmailAndPassword(auth, data.email, data.pwd)
       .then(() => {
-        redirect("/dashboard")
+        router.push("/dashboard")
       })
       .catch((error) => {
         const errorCode = error.code

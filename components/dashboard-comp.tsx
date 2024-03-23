@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -7,10 +9,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 export function MyInformation() {
   return (
     <>
+
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">개인정보</CardTitle>
@@ -20,8 +32,8 @@ export function MyInformation() {
           <div className="font-KBO-Dia-Gothic_bold flex flex-col gap-4 text-2xl">
             <h1>이메일: 111@111.111</h1>
             <h1>학번: 20110이준영</h1>
-            <h1 className="flex gap-3"><span>직급: 총관리자(회장)</span><Button>승진 신청</Button></h1>
-            <h1 className="flex gap-3"><span>비밀번호: ********</span><Button>변경 하기</Button></h1>
+            <h1 className="flex gap-3"><span>직급: 총관리자(회장)</span><Button className="font-SUITE-Regular">승진 신청</Button></h1>
+            <h1 className="flex gap-3"><span>비밀번호: ********</span><Button className="font-SUITE-Regular" asChild><Link href="/dashboard/my/change-pwd">변경하기</Link></Button></h1>
           </div>
         </CardContent>
         <hr className="my-2" />
@@ -41,9 +53,10 @@ export function MyInformation() {
   )
 }
 
-export function MySuggestions() {
+export function MySuggestions({ whereIsThisUsed }: { whereIsThisUsed: string }) {
   return (
     <>
+
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">최근 작성한 건의 사항</CardTitle>
@@ -62,9 +75,31 @@ export function MySuggestions() {
             )
           )}
         </CardContent>
-        <CardFooter className="flex justify-end">
-          <Button className="font-SUITE-Regular">+더보기</Button>
-        </CardFooter>
+        {whereIsThisUsed == "home" ? (
+          <CardFooter className="flex justify-end">
+            <Button className="font-SUITE-Regular">+더보기</Button>
+          </CardFooter>
+        ) : (
+          <Pagination className="mb-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
       </Card>
     </>
   )

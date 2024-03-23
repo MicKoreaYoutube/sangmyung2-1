@@ -46,19 +46,6 @@ const siteConfig = {
       ]
     },
     {
-      title: "대시보드",
-      linkList: [
-        {
-          title: "대시보드",
-          href: "/dashboard"
-        },
-        {
-          title: "내 정보",
-          href: "/suggestions/create"
-        }
-      ]
-    },
-    {
       title: "문의하기",
       href: "/muneui"
     }
@@ -202,7 +189,7 @@ import { dropDownItem } from "@/types/dropdown"
 export const dashboardSidebarContent: dashboardSidebarItem[] = [
   {
     icon: ["fas", "house"],
-    title: "Dashboard",
+    title: "대시보드",
     href: "/dashboard"
   },
   {
@@ -281,8 +268,6 @@ export const navDropDownContent: dropDownItem = {
     ]
   ]
 }
-
-const typetlqkf = [[{}, {}, {}], [{}, { semiDropDown: [[{}], [{}, {}, {}], [{}]] }], []]
 
 export { siteConfig }
 

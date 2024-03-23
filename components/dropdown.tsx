@@ -46,7 +46,7 @@ interface dropDownProps {
 
 export function NavDropDown({ items }: dropDownProps) {
 
-  const [isLogin, changeLoginState] = useState(false)
+  const [isLogin, changeLoginState] = useState<boolean | string>("not set")
   const [loginedUser, setLoginedUser] = useState<User>()
 
   library.add(fas, far, fab)
@@ -67,7 +67,7 @@ export function NavDropDown({ items }: dropDownProps) {
   return (
     <>
       {
-        isLogin ? (
+        isLogin == true ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button>
@@ -82,7 +82,7 @@ export function NavDropDown({ items }: dropDownProps) {
                 </div>
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
+            <DropdownMenuContent className="font-TheJamsil5Bold w-56">
               <DropdownMenuLabel>{auth.currentUser?.displayName}</DropdownMenuLabel>
               {items?.content.length ? (
                 <>
@@ -108,8 +108,8 @@ export function NavDropDown({ items }: dropDownProps) {
                                           <div key={semiDropDownIndex}>
                                             <DropdownMenuSeparator className={`${semiDropDownIndex == 0 ? "hidden" : null}`} />
                                             {semiDropDownItem.map((semiDropDownItemInItem, semiDropDownItemInItemIndex) => (
-                                              <DropdownMenuItem key={semiDropDownItemInItemIndex}>
-                                                <Link href={`${semiDropDownItemInItem.href ? semiDropDownItemInItem.href : null}`}>
+                                              <Link href={`${semiDropDownItemInItem.href ? semiDropDownItemInItem.href : null}`} key={semiDropDownItemInItemIndex}>
+                                                <DropdownMenuItem>
                                                   {semiDropDownItemInItem.icon ? (
                                                     <FontAwesomeIcon icon={semiDropDownItemInItem.icon} className="mr-2 h-4 w-4" />
                                                   ) : null}
@@ -117,8 +117,8 @@ export function NavDropDown({ items }: dropDownProps) {
                                                   {semiDropDownItemInItem.shortcut ? (
                                                     <DropdownMenuShortcut>{semiDropDownItemInItem.shortcut}</DropdownMenuShortcut>
                                                   ) : null}
-                                                </Link>
-                                              </DropdownMenuItem>
+                                                </DropdownMenuItem>
+                                              </Link>
                                             ))}
                                           </div>
                                         ))}
@@ -126,8 +126,8 @@ export function NavDropDown({ items }: dropDownProps) {
                                     </DropdownMenuPortal>
                                   </DropdownMenuSub>
                                 ) : (
-                                  <DropdownMenuItem key={itemInItemIndex}>
-                                    <Link href={`${itemInItem.href ? itemInItem.href : null}`}>
+                                  <Link href={`${itemInItem.href ? itemInItem.href : null}`} key={itemInItemIndex}>
+                                    <DropdownMenuItem>
                                       {itemInItem.icon ? (
                                         <FontAwesomeIcon icon={itemInItem.icon} className="mr-2 h-4 w-4" />
                                       ) : null}
@@ -135,8 +135,8 @@ export function NavDropDown({ items }: dropDownProps) {
                                       {itemInItem.shortcut ? (
                                         <DropdownMenuShortcut>{itemInItem.shortcut}</DropdownMenuShortcut>
                                       ) : null}
-                                    </Link>
-                                  </DropdownMenuItem>
+                                    </DropdownMenuItem>
+                                  </Link>
                                 )}
                               </>
                             ))}
@@ -150,9 +150,13 @@ export function NavDropDown({ items }: dropDownProps) {
             </DropdownMenuContent>
           </DropdownMenu >
         ) : (
-          <Button asChild variant="ghost" size="icon">
-            <Link href="/auth/login"><FontAwesomeIcon icon={["fas", "right-to-bracket"]} className="h-5 w-5" /></Link>
-          </Button>
+          isLogin == false ? (
+            <Button asChild variant="ghost" size="icon">
+              <Link href="/auth/login"><FontAwesomeIcon icon={["fas", "right-to-bracket"]} className="h-5 w-5" /></Link>
+            </Button>
+          ) : (
+            <LoadingComp />
+          )
         )
       }
     </>
