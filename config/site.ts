@@ -33,11 +33,11 @@ const siteConfig = {
       linkList: [
         {
           title: "건의함 홈",
-          href: "/suggestions"
+          href: "/board/suggestions"
         },
         {
           title: "작성하기",
-          href: "/suggestions/create"
+          href: "/board/suggestions/create"
         },
         {
           title: "내가 올린 건의 사항",

@@ -44,7 +44,7 @@ export default function Login() {
       setInterval(() => {
         setSec(prevSec => prevSec - 1)
       }, 1000)
-      router.back()
+      router.push("/")
     }
   }, [error, sec, router])
 

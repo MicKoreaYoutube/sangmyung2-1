@@ -28,7 +28,7 @@ import {
 
 export default function Page() {
 
-  const classToAdd = "animate__fadeIn"
+  const classToAdd = "animate__fadeInUp"
 
   return (
     <>
@@ -40,7 +40,7 @@ export default function Page() {
               안녕하세요. 이곳은 <br />
               <InView triggerOnce={true} threshold={1} delay={1600}>
                 {({ inView, ref }) => (
-                  <span ref={ref} className={`animate__animated ${inView ? 'animate__fadeInUp' : 'invisible'}`}>상명중학교 2학년 1반 건의함 사이트 입니다.</span>
+                  <span ref={ref} className={`animate__animated ${inView ? classToAdd : 'invisible'}`}>상명중학교 2학년 1반 건의함 사이트 입니다.</span>
                 )}
               </InView>
             </h1>
@@ -67,7 +67,7 @@ export default function Page() {
             </InView>
             <InView triggerOnce={true} threshold={1} delay={2300}>
               {({ inView, ref }) => (
-                <p ref={ref} className={`font-SUITE-Regular animate__animated text-lg text-muted-foreground ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                <p ref={ref} className={`font-SUITE-Regular animate__animated text-lg text-muted-foreground ${inView ? classToAdd : 'invisible'}`}>
                   최근에 올라온 건의 사항들을 확인하세요!
                 </p>
               )}
@@ -78,7 +78,7 @@ export default function Page() {
               (item) => (
                 <InView triggerOnce={true} threshold={1} key={item}>
                   {({ inView, ref }) => (
-                    <Card className={`animate__animated w-full ${inView ? "animate__fadeInUp" : "invisible"}`} ref={ref}>
+                    <Card className={`animate__animated w-full ${inView ? classToAdd : "invisible"}`} ref={ref}>
                       <CardHeader>
                         <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">건의사항 {item}</CardTitle>
                         <CardDescription className="font-SUITE-Regular text-xl">내용 {item}</CardDescription>
@@ -98,13 +98,13 @@ export default function Page() {
             >
               <InView triggerOnce={true} threshold={1}>
                 {({ inView, ref }) => (
-                  <span ref={ref} className={`animate__animated ${inView ? 'animate__fadeInUp' : 'invisible'}`}>직접 건의하고 싶나요?</span>
+                  <span ref={ref} className={`animate__animated ${inView ? classToAdd : 'invisible'}`}>직접 건의하고 싶나요?</span>
                 )}
               </InView>
             </h1>
             <InView triggerOnce={true} threshold={1}>
               {({ inView, ref }) => (
-                <div ref={ref} className={`font-TheJamsil5Bold animate__animated flex flex-col gap-4 md:flex-row ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                <div ref={ref} className={`font-TheJamsil5Bold animate__animated flex flex-col gap-4 md:flex-row ${inView ? classToAdd : 'invisible'}`}>
                   <Link
                     href={siteConfig.links.shadcnuiDocs}
                     target="_blank"
@@ -140,7 +140,7 @@ export default function Page() {
             </InView>
             <InView triggerOnce={true} threshold={1} delay={2300}>
               {({ inView, ref }) => (
-                <p ref={ref} className={`font-SUITE-Regular animate__animated text-lg text-muted-foreground ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                <p ref={ref} className={`font-SUITE-Regular animate__animated text-lg text-muted-foreground ${inView ? classToAdd : 'invisible'}`}>
                   최근에 올라온 공지들도 확인하세요!
                 </p>
               )}
@@ -151,7 +151,7 @@ export default function Page() {
               (item) => (
                 <InView triggerOnce={true} threshold={1} key={item}>
                   {({ inView, ref }) => (
-                    <Card className={`animate__animated w-full ${inView ? "animate__fadeInUp" : "invisible"}`} ref={ref}>
+                    <Card className={`animate__animated w-full ${inView ? classToAdd : "invisible"}`} ref={ref}>
                       <CardHeader>
                         <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">공지 {item}</CardTitle>
                         <CardDescription className="font-SUITE-Regular text-xl">내용 {item}</CardDescription>

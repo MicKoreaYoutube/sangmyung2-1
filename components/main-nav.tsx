@@ -71,6 +71,7 @@ export function MainNav({ items }: MainNavProps) {
                                       key={index}
                                       title={linkListItem.title}
                                       href={linkListItem.href}
+                                      className={linkListItem.description ? "" : "py-4"}
                                     >
                                       {linkListItem.description}
                                     </NavigaitionMenuListItem>
