@@ -248,7 +248,7 @@ export const navDropDownContent: dropDownItem = {
       {
         icon: ["fas", "circle-info"],
         title: "내 정보",
-        href: "/dashboard/information",
+        href: "/dashboard/my/information",
         shortcut: ""
       },
       {

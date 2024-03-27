@@ -1,3 +1,5 @@
+'use client'
+
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
@@ -18,11 +20,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { 
+  Avatar, 
+  AvatarFallback, 
+  AvatarImage 
+} from "@/components/ui/avatar"
+
 
 export function MyInformation() {
   return (
     <>
-
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">개인정보</CardTitle>
@@ -30,10 +37,18 @@ export function MyInformation() {
         </CardHeader>
         <CardContent>
           <div className="font-KBO-Dia-Gothic_bold flex flex-col gap-4 text-2xl">
+            <div className="flex flex-row gap-3">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col">
+                <h1>학번: 20110이준영</h1>
+                <h1 className="flex gap-3 text-lg text-muted-foreground"><span>직급: 총관리자(회장)</span><Button className="font-SUITE-Regular" size="sm">승진 신청</Button></h1>
+              </div>
+            </div>
             <h1>이메일: 111@111.111</h1>
-            <h1>학번: 20110이준영</h1>
-            <h1 className="flex gap-3"><span>직급: 총관리자(회장)</span><Button className="font-SUITE-Regular">승진 신청</Button></h1>
-            <h1 className="flex gap-3"><span>비밀번호: ********</span><Button className="font-SUITE-Regular" asChild><Link href="/dashboard/my/change-pwd">변경하기</Link></Button></h1>
+            <h1 className="flex gap-3"><span>비밀번호: ********</span><Button className="font-SUITE-Regular" asChild size="sm"><Link href="/dashboard/my/change-pwd">변경하기</Link></Button></h1>
           </div>
         </CardContent>
         <hr className="my-2" />
