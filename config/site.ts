@@ -207,6 +207,11 @@ export const dashboardSidebarContent: dashboardSidebarItem[] = [
         href: "/dashboard/my/suggestions"
       },
       {
+        icon: ["fas", "arrow-up"],
+        title: "승진 신청",
+        href: "/dashboard/my/apply-to-promotion"
+      },
+      {
         icon: ["fas", "lock"],
         title: "비밀번호 수정",
         href: "/dashboard/my/change-pwd"
@@ -222,48 +227,41 @@ export const navDropDownContent: dropDownItem = {
       {
         icon: ["fas", "box-archive"],
         title: "건의함",
-        href: "/board/suggestions",
-        shortcut: ""
+        href: "/board/suggestions"
       },
       {
         icon: ["fas", "message"],
         title: "건의하기",
-        href: "/board/suggestions/create",
-        shortcut: ""
+        href: "/board/suggestions/create"
       },
       {
         icon: ["fas", "file"],
         title: "내가 쓴 건의사항",
-        href: "/dashboard/my-suggestions",
-        shortcut: ""
+        href: "/dashboard/my-suggestions"
       }
     ],
     [
       {
         icon: ["fas", "table-columns"],
         title: "대시보드",
-        href: "/dashboard",
-        shortcut: ""
+        href: "/dashboard"
       },
       {
         icon: ["fas", "circle-info"],
         title: "내 정보",
-        href: "/dashboard/my/information",
-        shortcut: ""
+        href: "/dashboard/my/information"
       },
       {
         icon: ["fas", "lock"],
         title: "비밀번호 수정",
-        href: "/dashboard/change-pwd",
-        shortcut: ""
+        href: "/dashboard/change-pwd"
       }
     ],
     [
       {
         icon: ["fas", "right-from-bracket"],
         title: "로그아웃",
-        href: "/auth/logout",
-        shortcut: ""
+        href: "/auth/logout"
       }
     ]
   ]
