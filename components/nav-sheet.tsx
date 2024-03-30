@@ -48,7 +48,7 @@ export function NavSheet({ items }: NavSheetProps) {
             <Menu />
           </Button>
         </SheetTrigger>
-        <SheetContent className="font-RixInooAriDuriR flex h-screen flex-col justify-between">
+        <SheetContent className="font-RixInooAriDuriR flex h-full flex-col justify-between">
           <div>
             <SheetHeader>
               <SheetTitle>
@@ -61,7 +61,7 @@ export function NavSheet({ items }: NavSheetProps) {
                 {siteConfig.description}
               </SheetDescription>
             </SheetHeader>
-            <Accordion type="single" collapsible className="w-full overflow-auto">
+            <Accordion type="single" collapsible className="w-full">
               {items?.length ? (
                 <>
                   {items?.map(

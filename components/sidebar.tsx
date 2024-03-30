@@ -66,9 +66,9 @@ export function DashboardSidebar({ items, isCollapsed }: dashboardSidebarInterfa
                     <div key={index}>
                       {item.content?.length ? (
                         <AccordionItem value={item.title}>
-                          <AccordionTrigger className={`rounded-md font-normal hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-primary data-[state=open]:text-primary-foreground ${isCollapsed ? "w-4 px-1 py-0.5 lg:m-0.5" : "m-1 px-2 py-1.5"}`}  data-isCollapsed={isCollapsed}>
+                          <AccordionTrigger className={`rounded-md font-normal hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-primary data-[state=open]:text-primary-foreground ${isCollapsed ? "w-4 px-2 py-[6px] lg:m-0.5" : "m-1 px-2 py-1.5"}`}  data-isCollapsed={isCollapsed}>
                             {item.icon ? (
-                              <FontAwesomeIcon icon={item.icon} className={`${isCollapsed ? "w-full text-3xl" : "mr-1 "}`} fixedWidth={isCollapsed ? false : true} />
+                              <FontAwesomeIcon icon={item.icon} className={`${isCollapsed ? "text-3xl" : "mr-1"} w-full`} fixedWidth={isCollapsed ? false : true} />
                             ) : null}
                             {isCollapsed ? null : (
                               <>
@@ -83,7 +83,7 @@ export function DashboardSidebar({ items, isCollapsed }: dashboardSidebarInterfa
                                 {item.content?.map(
                                   (contentItem, contentIndex) => (
                                     <Link href={contentItem.href} key={`${index}${contentIndex}`}>
-                                      <CommandItem className={`${isCollapsed ? "" : "ml-2"} data-[here=true]:bg-primary data-[here=true]:text-primary-foreground`} data-here={`${pathName == contentItem.href}`}>
+                                      <CommandItem className={`${isCollapsed ? "" : "ml-2 mr-0.5"} data-[here=true]:bg-primary data-[here=true]:text-primary-foreground`} data-here={`${pathName == contentItem.href}`}>
                                         {contentItem.icon ? (
                                           <FontAwesomeIcon icon={contentItem.icon} className={`${isCollapsed ? "text-3xl" : "p-0.5 text-xl"} w-full`} fixedWidth={isCollapsed ? false : true} />
                                         ) : null}

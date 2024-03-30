@@ -35,6 +35,15 @@ import {
   AlertTitle,
 } from "@/components/ui/alert"
 import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -55,6 +64,8 @@ export default function Page() {
 
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
+  const allowedTypes = ["학급", "학교"]
+
   const createSuggestionFormSchema = z.object({
     title: z.string({
       required_error: "필수 입력란입니다."
@@ -63,6 +74,11 @@ export default function Page() {
     }),
     content: z.string({
       required_error: "필수 입력란입니다."
+    }),
+    type: z.string({
+      required_error: "필수 입력란입니다."
+    }).refine((type) => allowedTypes.includes(type), {
+      message: "허용되지 않는 구분입니다."
     })
   })
 
@@ -78,7 +94,7 @@ export default function Page() {
         content: data.content,
         createTime: new Date(),
         updateTime: new Date(),
-        status: "normal"
+        status: data.type
       })
       router.push("/board/suggestions")
     } catch (error: any) {
@@ -89,16 +105,14 @@ export default function Page() {
         setError({ isError: false, errorCode: "", errorMessage: "" })
       }, 3000)
     }
-
   }
 
   return (
     <>
-
       <section className="container grid gap-7 py-10 md:px-40">
         <div className="grid gap-3 text-center">
           <h1 className="font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl">나도 건의하기</h1>
-          <span className="font-SUITE-Regular text-md animate__animated md:text-xl">직접 우리반에 건의해보세요!</span>
+          <span className="font-SUITE-Regular text-md animate__animated md:text-xl">직접 우리반 또는 학교에 건의해보세요!</span>
         </div>
         <Card>
           <div className="flex justify-end">
@@ -106,11 +120,11 @@ export default function Page() {
           </div>
           <CardHeader>
             <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">건의사항 입력하기</CardTitle>
-            <CardDescription className="font-SUITE-Regular text-md md:text-xl">여러분이 생각하는 우리반에서 고쳐야 할 점이나 사이트에 대한 것 등을 건의해주세요!</CardDescription>
+            <CardDescription className="font-SUITE-Regular text-md md:text-xl">여러분이 생각하는 우리반에서 고쳐야 할 점이나 학교에 대한 건의사항, 사이트에 대한 것 등을 건의해주세요!</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(createDoc)} className="font-SUITE-Regular space-y-5">
+              <form onSubmit={form.handleSubmit(createDoc)} className="font-SUITE-Regular space-y-5" method="POST">
                 <FormField
                   control={form.control}
                   name="title"
@@ -137,15 +151,31 @@ export default function Page() {
                     </FormItem>
                   )}
                 />
-                {error.isError ? (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>{error.errorCode}</AlertTitle>
-                    <AlertDescription>
-                      {error.errorMessage}
-                    </AlertDescription>
-                  </Alert>
-                ) : null}
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>구분*</FormLabel>
+                      <FormControl>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="직책을 선택하세요" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectGroup className="font-SUITE-Regular">
+                              <SelectItem value="학급">학급</SelectItem>
+                              <SelectItem value="학교">학교</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <div className="flex justify-end">
                   <Button type="submit">작성하기</Button>
                 </div>

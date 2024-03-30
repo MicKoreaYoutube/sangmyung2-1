@@ -1,8 +1,10 @@
 'use client'
 
+import { useState, useEffect } from "react"
+
 import Link from "next/link"
 
-import { collection, onSnapshot } from "firebase/firestore"
+import { collection, onSnapshot, orderBy, query, Timestamp } from "firebase/firestore"
 import { db } from "@/firebase/initialization"
 
 import { InView } from "react-intersection-observer"
@@ -23,14 +25,43 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { MySuggestions } from "@/components/dashboard-comp"
 
 export default function Page() {
 
   const classToAdd = "animate__fadeInUp"
 
-  const unsub = onSnapshot(collection(db, "suggestions"), (doc) => {
-    console.log("Current data: ", doc);
-});
+  const q = query(collection(db, "suggestions"), orderBy("updateTime", "desc"))
+
+  const [suggestionsList, setSuggestionsList] = useState<documentType[]>([])
+
+  interface documentType {
+    id: string
+    title: string
+    content: string
+    author: string
+    status: string
+    createTime: Timestamp
+    updateTime: Timestamp
+  }
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const suggestions: documentType[] = []
+      querySnapshot.forEach((doc) => {
+        suggestions.push({
+          id: doc.id,
+          title: doc.data().title,
+          content: doc.data().content,
+          author: doc.data().author,
+          status: doc.data().status,
+          createTime: doc.data().createTime,
+          updateTime: doc.data().updateTime
+        })
+      })
+      setSuggestionsList(suggestions)
+    })
+  }, [])
 
   return (
     <>
@@ -48,14 +79,20 @@ export default function Page() {
           </InView>
         </div>
         <div className="grid gap-4">
-          {[0, 1, 2].map(
-            (item) => (
-              <InView triggerOnce={true} threshold={1} key={item}>
+          {suggestionsList.map(
+            (item, index) => (
+              <InView triggerOnce={true} threshold={1} key={index}>
                 {({ inView, ref }) => (
                   <Card className={`animate__animated w-full ${inView ? classToAdd : "invisible"}`} ref={ref}>
                     <CardHeader>
-                      <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">건의사항 {item}</CardTitle>
-                      <CardDescription className="font-SUITE-Regular text-xl">내용 {item}</CardDescription>
+                      <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl underline-offset-2 hover:underline"><Link href={`/board/suggestions/${item.id}`}>{item.title}</Link></CardTitle>
+                      <CardDescription className="font-SUITE-Regular grid grid-cols-[3fr_1fr_6fr] text-xl">
+                        <span>{item.content.slice(0, 7)}...</span>
+                        <span className="mx-auto">
+                          <div className="m-2 flex h-3 w-3 items-center justify-center rounded-full bg-blue-500" />
+                        </span>
+                        <span className="text-end">{item.updateTime.toDate().toLocaleString()}</span>
+                      </CardDescription>
                     </CardHeader>
                   </Card>
                 )}

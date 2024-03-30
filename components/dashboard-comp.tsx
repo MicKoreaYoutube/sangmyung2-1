@@ -1,6 +1,13 @@
 'use client'
 
+import { useState, useEffect } from "react"
+
 import Link from "next/link"
+
+import { doc, updateDoc, onSnapshot, DocumentData } from "firebase/firestore"
+import { auth, db } from "@/firebase/initialization"
+
+import { AlertCircle } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -25,9 +32,90 @@ import {
   AvatarFallback,
   AvatarImage
 } from "@/components/ui/avatar"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
 
 export function MyInformation() {
+
+  const user = auth.currentUser
+
+  const { toast } = useToast()
+
+  const [userData, setUserData] = useState<DocumentData | undefined>()
+
+  const allowedRoles = ["회장", "자치부장", "정보부장"]
+
+  const promotionFormSchema = z.object({
+    whichRole: z.string({
+      required_error: "필수 입력란입니다."
+    }).refine(role => allowedRoles.includes(role), {
+      message: "허용되지 않는 직책입니다."
+    })
+  })
+
+  const form = useForm<z.infer<typeof promotionFormSchema>>({
+    resolver: zodResolver(promotionFormSchema)
+  })
+
+  async function promotion(data: z.infer<typeof promotionFormSchema>) {
+    if (user) {
+      await updateDoc(doc(db, "users", user.uid), {
+        applyToPromotion: data.whichRole
+      })
+    }
+    toast({
+      title: "승진이 신청되었습니다.",
+      description: `신청한 직책: ${data.whichRole}`,
+    })
+  }
+
+  useEffect(()=>{
+    if (user) {
+      const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
+        console.log(doc.data())
+        setUserData(doc.data())
+      })
+    }
+  }, [user])
+
   return (
     <>
       <Card className="w-full">
@@ -43,11 +131,63 @@ export function MyInformation() {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <h1>학번: 20110이준영</h1>
-                <h1 className="flex gap-3 text-lg text-muted-foreground"><span>직급: 총관리자(회장)</span><Button className="font-SUITE-Regular" size="sm">승진 신청</Button></h1>
+                <h1>학번: {user?.displayName}</h1>
+                <h1 className="flex gap-3 text-lg text-muted-foreground">
+                  <span>직급: {userData && userData.role ? userData.role : ""}</span>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="font-SUITE-Regular" size="sm">승진 신청</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="font-KBO-Dia-Gothic_bold text-2xl">승진 신청</DialogTitle>
+                        <DialogDescription className="font-SUITE-Regular text-lg">
+                          회장, 자치부장, 정보부장 전용입니다.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid items-center gap-4">
+                          <Form {...form}>
+                            <form onSubmit={form.handleSubmit(promotion)} className="font-SUITE-Regular space-y-5">
+                              <FormField
+                                control={form.control}
+                                name="whichRole"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>승진할 직책*</FormLabel>
+                                    <FormControl>
+                                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                          <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="직책을 선택하세요" />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          <SelectGroup className="font-SUITE-Regular">
+                                            <SelectItem value="회장">회장</SelectItem>
+                                            <SelectItem value="자치부장">자치부장</SelectItem>
+                                            <SelectItem value="정보부장">정보부장</SelectItem>
+                                          </SelectGroup>
+                                        </SelectContent>
+                                      </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <div className="flex justify-end">
+                                <Button type="submit">신청하기</Button>
+                              </div>
+                            </form>
+                          </Form>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                </h1>
               </div>
             </div>
-            <h1>이메일: 111@111.111</h1>
+            <h1>{user?.email}</h1>
             <h1 className="flex gap-3"><span>비밀번호: ********</span><Button className="font-SUITE-Regular" asChild size="sm"><Link href="/dashboard/my/change-pwd">변경하기</Link></Button></h1>
           </div>
         </CardContent>
@@ -64,6 +204,7 @@ export function MyInformation() {
           </div>
         </CardContent>
       </Card>
+      <Toaster />
     </>
   )
 }

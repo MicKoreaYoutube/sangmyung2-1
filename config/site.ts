@@ -207,11 +207,6 @@ export const dashboardSidebarContent: dashboardSidebarItem[] = [
         href: "/dashboard/my/suggestions"
       },
       {
-        icon: ["fas", "arrow-up"],
-        title: "승진 신청",
-        href: "/dashboard/my/apply-to-promotion"
-      },
-      {
         icon: ["fas", "lock"],
         title: "비밀번호 수정",
         href: "/dashboard/my/change-pwd"
@@ -254,7 +249,7 @@ export const navDropDownContent: dropDownItem = {
       {
         icon: ["fas", "lock"],
         title: "비밀번호 수정",
-        href: "/dashboard/change-pwd"
+        href: "/dashboard/my/change-pwd"
       }
     ],
     [
