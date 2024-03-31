@@ -41,6 +41,7 @@ export default function Page() {
     content: string
     author: string
     status: string
+    toWhom: string
     createTime: Timestamp
     updateTime: Timestamp
   }
@@ -55,6 +56,7 @@ export default function Page() {
           content: doc.data().content,
           author: doc.data().author,
           status: doc.data().status,
+          toWhom: doc.data().toWhom,
           createTime: doc.data().createTime,
           updateTime: doc.data().updateTime
         })
@@ -88,8 +90,9 @@ export default function Page() {
                       <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl underline-offset-2 hover:underline"><Link href={`/board/suggestions/${item.id}`}>{item.title}</Link></CardTitle>
                       <CardDescription className="font-SUITE-Regular grid grid-cols-[3fr_1fr_6fr] text-xl">
                         <span>{item.content.slice(0, 7)}...</span>
-                        <span className="mx-auto">
-                          <div className="m-2 flex h-3 w-3 items-center justify-center rounded-full bg-blue-500" />
+                        <span className="mx-auto flex flex-row data-[status=미반영]:text-[#f00] [&[data-status=미반영]>div.mark-circle]:bg-[#f00] data-[status=처리중]:text-[#ff0] [&[data-status=처리중]>div.mark-circle]:bg-[#ff0]" data-status={item.status}>
+                          <div className="mark-circle m-2 flex h-3 w-3 items-center justify-center rounded-full" />
+                          {item.status}
                         </span>
                         <span className="text-end">{item.updateTime.toDate().toLocaleString()}</span>
                       </CardDescription>

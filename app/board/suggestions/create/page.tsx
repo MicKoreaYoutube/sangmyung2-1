@@ -94,7 +94,8 @@ export default function Page() {
         content: data.content,
         createTime: new Date(),
         updateTime: new Date(),
-        status: data.type
+        toWhom: data.type,
+        status: "미반영"
       })
       router.push("/board/suggestions")
     } catch (error: any) {
@@ -161,7 +162,7 @@ export default function Page() {
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="직책을 선택하세요" />
+                              <SelectValue placeholder="어디에 보내는 건의사항인지 선택하세요" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
