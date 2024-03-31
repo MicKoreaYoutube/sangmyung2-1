@@ -44,12 +44,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-export default function Page() {
+export default function BoardSuggestionsCreatePage() {
 
   const router = useRouter()
 
@@ -79,7 +80,8 @@ export default function Page() {
       required_error: "필수 입력란입니다."
     }).refine((type) => allowedTypes.includes(type), {
       message: "허용되지 않는 구분입니다."
-    })
+    }),
+    anonymous: z.boolean()
   })
 
   const form = useForm<z.infer<typeof createSuggestionFormSchema>>({
@@ -95,7 +97,8 @@ export default function Page() {
         createTime: new Date(),
         updateTime: new Date(),
         toWhom: data.type,
-        status: "미반영"
+        status: "미반영",
+        anonymous: data.anonymous
       })
       router.push("/board/suggestions")
     } catch (error: any) {
@@ -110,7 +113,7 @@ export default function Page() {
 
   return (
     <>
-      <section className="container grid gap-7 py-10 md:px-40">
+      <section className="container grid gap-7 py-20 md:px-40">
         <div className="grid gap-3 text-center">
           <h1 className="font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl">나도 건의하기</h1>
           <span className="font-SUITE-Regular text-md animate__animated md:text-xl">직접 우리반 또는 학교에 건의해보세요!</span>
@@ -146,7 +149,7 @@ export default function Page() {
                     <FormItem>
                       <FormLabel>내용*</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="건의사항을 입력해주세요..." {...field} rows={8} />
+                        <Textarea placeholder="건의사항을 입력해주세요..." {...field} rows={8} className="resize-none"/>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -177,6 +180,26 @@ export default function Page() {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="anonymous"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-base">
+                          익명 여부
+                        </FormLabel>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <h1 className="text-sm">* 표시는 필수 입력란입니다.</h1>
                 <div className="flex justify-end">
                   <Button type="submit">작성하기</Button>
                 </div>
