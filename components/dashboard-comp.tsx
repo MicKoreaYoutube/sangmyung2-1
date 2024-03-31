@@ -187,7 +187,7 @@ export function MyInformation() {
                 </h1>
               </div>
             </div>
-            <h1>{user?.email}</h1>
+            <h1>이메일: {user?.email}</h1>
             <h1 className="flex gap-3"><span>비밀번호: ********</span><Button className="font-SUITE-Regular" asChild size="sm"><Link href="/dashboard/my/change-pwd">변경하기</Link></Button></h1>
           </div>
         </CardContent>
