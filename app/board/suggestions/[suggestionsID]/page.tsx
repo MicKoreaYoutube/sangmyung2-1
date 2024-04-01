@@ -71,8 +71,7 @@ export default function BoardSuggestionsReadPage({ params }: { params: { suggest
                 <p className="text-lg font-SUITE-Regular whitespace-pre-wrap">{suggestions?.content}</p>
               </CardContent>
               <CardFooter className="font-SUITE-Regular flex flex-col space-y-3">
-                <h1 className="text-xl">댓글</h1>
-                <Input placeholder="댓글을 입력하세요." />
+                <h1 className="text-xl">댓글 기능은 추후에 제작 예정입니다.</h1>
               </CardFooter>
             </Card>
           )}

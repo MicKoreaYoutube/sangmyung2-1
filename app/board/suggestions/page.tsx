@@ -157,7 +157,7 @@ export default function BoardSuggestionsPage() {
                                         <span>반영 상태 수정</span>
                                       </DropdownMenuSubTrigger>
                                       <DropdownMenuPortal>
-                                        <DropdownMenuSubContent>
+                                        <DropdownMenuSubContent className="font-SUITE-Regular">
                                           <DropdownMenuItem>
                                             <X className="mr-2 h-4 w-4" />
                                             <span>미반영</span>
