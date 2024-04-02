@@ -73,7 +73,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
 
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
-  const allowedTypes = ["학급", "학교"]
+  const allowedToWhoms = ["학급", "학교"]
 
   const updateSuggestionFormSchema = z.object({
     title: z.string({
@@ -84,7 +84,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
     content: z.string({
       required_error: "필수 입력란입니다."
     }),
-    type: z.string().refine((type) => allowedTypes.includes(type), {
+    toWhom: z.string().refine((type) => allowedToWhoms.includes(type), {
       message: "허용되지 않는 구분입니다."
     }),
     anonymous: z.boolean()
@@ -93,17 +93,18 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
   const form = useForm<z.infer<typeof updateSuggestionFormSchema>>({
     resolver: zodResolver(updateSuggestionFormSchema),
     defaultValues: {
-      type: suggestion?.toWhom
+      toWhom: suggestion?.toWhom,
+      anonymous: suggestion?.anonymous
     }
   })
 
-  async function createDoc(data: z.infer<typeof updateSuggestionFormSchema>) {
+  async function updateDocument(data: z.infer<typeof updateSuggestionFormSchema>) {
     try {
       await updateDoc(doc(db, "suggestions", params.suggestionsID), {
         title: data.title,
         content: data.content,
         updateTime: new Date(),
-        toWhom: data.type,
+        toWhom: data.toWhom,
         anonymous: data.anonymous
       })
       router.push("/board/suggestions")
@@ -134,7 +135,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(createDoc)} className="font-SUITE-Regular space-y-5" method="PUT">
+              <form onSubmit={form.handleSubmit(updateDocument)} className="font-SUITE-Regular space-y-5" method="PUT">
                 <FormField
                   control={form.control}
                   name="title"
@@ -163,18 +164,18 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
                 />
                 <FormField
                   control={form.control}
-                  name="type"
+                  name="toWhom"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>구분*</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} defaultValue={suggestion?.toWhom}>
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder={suggestion?.toWhom} />
+                              <SelectValue placeholder="누구에게 보내는 건의사항인지 선택하세요." />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="font-SUITE-Regular" defaultValue="학급">
+                          <SelectContent className="font-SUITE-Regular">
                             <SelectItem value="학급">학급</SelectItem>
                             <SelectItem value="학교">학교</SelectItem>
                           </SelectContent>
@@ -196,8 +197,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
                       </div>
                       <FormControl>
                         <Switch
-                          defaultValue={suggestion?.anonymous}
-                          checked={field.value}
+                          defaultChecked={suggestion?.anonymous}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>

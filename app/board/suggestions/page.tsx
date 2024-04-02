@@ -95,10 +95,6 @@ export default function BoardSuggestionsPage() {
     }
   }, [])
 
-  useEffect(() => {
-
-  }, [])
-
   return (
     <>
       <section className="container grid gap-7 py-20 md:px-40">

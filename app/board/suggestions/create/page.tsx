@@ -88,7 +88,7 @@ export default function BoardSuggestionsCreatePage() {
     resolver: zodResolver(createSuggestionFormSchema),
   })
 
-  async function createDoc(data: z.infer<typeof createSuggestionFormSchema>) {
+  async function createDocument(data: z.infer<typeof createSuggestionFormSchema>) {
     try {
       await addDoc(collection(db, "suggestions"), {
         author: user?.displayName,
@@ -128,7 +128,7 @@ export default function BoardSuggestionsCreatePage() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(createDoc)} className="font-SUITE-Regular space-y-5" method="POST">
+              <form onSubmit={form.handleSubmit(createDocument)} className="font-SUITE-Regular space-y-5" method="POST">
                 <FormField
                   control={form.control}
                   name="title"
