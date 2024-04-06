@@ -50,7 +50,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
-export default function BoardSuggestionsCreatePage() {
+export default function BoardAnnouncementsCreatePage() {
 
   const router = useRouter()
 
@@ -67,7 +67,7 @@ export default function BoardSuggestionsCreatePage() {
 
   const allowedTypes = ["학급", "학교"]
 
-  const createSuggestionFormSchema = z.object({
+  const createAnnouncementFormSchema = z.object({
     title: z.string({
       required_error: "필수 입력란입니다."
     }).refine((value) => 3 <= value.length && value.length <= 128, {
@@ -76,19 +76,13 @@ export default function BoardSuggestionsCreatePage() {
     content: z.string({
       required_error: "필수 입력란입니다."
     }),
-    type: z.string({
-      required_error: "필수 입력란입니다."
-    }).refine((type) => allowedTypes.includes(type), {
-      message: "허용되지 않는 구분입니다."
-    }),
-    anonymous: z.boolean()
   })
 
-  const form = useForm<z.infer<typeof createSuggestionFormSchema>>({
-    resolver: zodResolver(createSuggestionFormSchema),
+  const form = useForm<z.infer<typeof createAnnouncementFormSchema>>({
+    resolver: zodResolver(createAnnouncementFormSchema),
   })
 
-  async function createDocument(data: z.infer<typeof createSuggestionFormSchema>) {
+  async function createDocument(data: z.infer<typeof createAnnouncementFormSchema>) {
     if (user?.emailVerified) {
       try {
         await addDoc(collection(db, "suggestions"), {
@@ -96,10 +90,7 @@ export default function BoardSuggestionsCreatePage() {
           title: data.title,
           content: data.content,
           createTime: new Date(),
-          updateTime: new Date(),
-          toWhom: data.type,
-          status: "미반영",
-          anonymous: data.anonymous
+          updateTime: new Date()
         })
         router.push("/board/suggestions")
       } catch (error: any) {
@@ -124,16 +115,16 @@ export default function BoardSuggestionsCreatePage() {
     <>
       <section className="container grid gap-7 py-20 md:px-40">
         <div className="grid gap-3 text-center">
-          <h1 className="font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl">나도 건의하기</h1>
-          <span className="font-SUITE-Regular text-md animate__animated md:text-xl">직접 우리반 또는 학교에 건의해보세요!</span>
+          <h1 className="font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl">공지사항 작성하기</h1>
+          <span className="font-SUITE-Regular text-md animate__animated md:text-xl">학급에 할 중요한 공지사항을 작성해보세요!</span>
         </div>
         <Card>
           <div className="flex justify-end">
             <Link href="/board/suggestions" className={buttonVariants({ variant: "ghost" }) + "font-SUITE-Regular px-2 absolute m-2"}><ChevronRight /></Link>
           </div>
           <CardHeader>
-            <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">건의사항 입력하기</CardTitle>
-            <CardDescription className="font-SUITE-Regular text-md md:text-xl">여러분이 생각하는 우리반에서 고쳐야 할 점이나 학교에 대한 건의사항, 사이트에 대한 것 등을 건의해주세요!</CardDescription>
+            <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">공지사항 입력하기</CardTitle>
+            <CardDescription className="font-SUITE-Regular text-md md:text-xl">공지사항은 관리자가 올리는 게시물입니다. 한 단어 한 단어 주의해가며 작성해주세요!</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -164,50 +155,6 @@ export default function BoardSuggestionsCreatePage() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="type"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>구분*</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="어디에 보내는 건의사항인지 선택하세요" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectGroup className="font-SUITE-Regular">
-                              <SelectItem value="학급">학급</SelectItem>
-                              <SelectItem value="학교">학교</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="anonymous"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">
-                          익명 여부
-                        </FormLabel>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
                 {error.isError ? (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
@@ -218,16 +165,6 @@ export default function BoardSuggestionsCreatePage() {
                   </Alert>
                 ) : null}
                 <h1 className="text-sm">* 표시는 필수 입력란입니다.</h1>
-                <p className="text-sm text-muted-foreground">
-                  작성하기 버튼을 누르실 경우, 당신은 {" "}
-                  <Link
-                    href="/terms"
-                    className="underline underline-offset-4 hover:text-primary"
-                  >
-                    이용약관
-                  </Link>
-                  에 동의한 것으로 간주합니다.
-                </p>
                 <div className="flex justify-end">
                   <Button type="submit">작성하기</Button>
                 </div>

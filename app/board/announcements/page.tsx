@@ -43,7 +43,7 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
 
-export default function BoardSuggestionsPage() {
+export default function BoardAnnouncementsPage() {
 
   const classToAdd = "animate__fadeInUp"
 
@@ -51,7 +51,7 @@ export default function BoardSuggestionsPage() {
 
   const { toast } = useToast()
 
-  const [suggestionsList, setSuggestionsList] = useState<DocumentData[]>([])
+  const [announcementsList, setAnnouncementsList] = useState<DocumentData[]>([])
   const [userDetail, setUserDetail] = useState<DocumentData>()
 
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
@@ -60,40 +60,24 @@ export default function BoardSuggestionsPage() {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const suggestions: DocumentData[] = []
+      const announcements: DocumentData[] = []
       querySnapshot.forEach((doc) => {
-        suggestions.push({
+        announcements.push({
           id: doc.id,
           ...doc.data()
         })
       })
-      setSuggestionsList(suggestions)
+      setAnnouncementsList(announcements)
     })
   }, [])
 
-  useEffect(() => {
+  useEffect(()=>{
     if (user) {
       const unsubscribe2 = onSnapshot(doc(db, "users", user.uid), (querySnapshot) => {
         setUserDetail(querySnapshot.data())
       })
     }
   }, [user])
-
-  async function changeSuggestionDocState({ id, whatState }: { id: string, whatState: string }) {
-    try {
-      await updateDoc(doc(db, "suggestions", id), {
-        status: whatState
-      })
-    } catch (error: any) {
-      const errorCode = error.code
-      const errorMessage = error.message
-      setError({ isError: true, errorCode: errorCode, errorMessage: errorMessage })
-      toast({
-        title: errorCode,
-        description: errorMessage,
-      })
-    }
-  }
 
   return (
     <>
@@ -111,7 +95,7 @@ export default function BoardSuggestionsPage() {
           </InView>
         </div>
         <div className="grid gap-4">
-          {suggestionsList.map(
+          {announcementsList.map(
             (item, index) => (
               <>
                 {item.status !== "delete" ? (
@@ -120,10 +104,10 @@ export default function BoardSuggestionsPage() {
                       <Card className={`animate__animated w-full ${inView ? classToAdd : "invisible"}`} ref={ref}>
                         <CardHeader>
                           <CardTitle className="font-KBO-Dia-Gothic_bold flex justify-between text-3xl">
-                            <Link href={`/board/suggestions/${item.id}`} className="underline-offset-2 hover:underline">
+                            <Link href={`/board/announcements/${item.id}`} className="underline-offset-2 hover:underline">
                               {item.title}
                             </Link>
-                            {userDetail && userDetail.role && (user?.displayName == item.author || userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장") ? (
+                            {userDetail && userDetail.role && (userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장") ? (
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                   <Button variant="outline" size="icon"><EllipsisVertical /></Button>
@@ -145,53 +129,12 @@ export default function BoardSuggestionsPage() {
                                       </DropdownMenuItem>
                                     </Link>
                                   </DropdownMenuGroup>
-                                  {userDetail && userDetail.role && (userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장") ? (
-                                    <>
-                                      <DropdownMenuSeparator />
-                                      <DropdownMenuGroup className="font-SUITE-Regular">
-                                        <DropdownMenuSub>
-                                          <DropdownMenuSubTrigger>
-                                            <PencilRuler className="mr-2 h-4 w-4" />
-                                            <span>반영 상태 수정</span>
-                                          </DropdownMenuSubTrigger>
-                                          <DropdownMenuPortal>
-                                            <DropdownMenuSubContent className="font-SUITE-Regular">
-                                              <DropdownMenuItem onClick={() => { changeSuggestionDocState({ id: item.id, whatState: "미반영" }) }}>
-                                                <X className="mr-2 h-4 w-4" />
-                                                <span>미반영</span>
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem onClick={() => { changeSuggestionDocState({ id: item.id, whatState: "처리중" }) }}>
-                                                <RefreshCcw className="mr-2 h-4 w-4" />
-                                                <span>처리중</span>
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem onClick={() => { changeSuggestionDocState({ id: item.id, whatState: "반영됨" }) }}>
-                                                <Check className="mr-2 h-4 w-4" />
-                                                <span>반영됨</span>
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem onClick={() => { changeSuggestionDocState({ id: item.id, whatState: "반려됨" }) }}>
-                                                <Ban className="mr-2 h-4 w-4" />
-                                                <span>반려됨</span>
-                                              </DropdownMenuItem>
-                                              <DropdownMenuItem onClick={() => { changeSuggestionDocState({ id: item.id, whatState: "보류됨" }) }}>
-                                                <OctagonPause className="mr-2 h-4 w-4" />
-                                                <span>보류됨</span>
-                                              </DropdownMenuItem>
-                                            </DropdownMenuSubContent>
-                                          </DropdownMenuPortal>
-                                        </DropdownMenuSub>
-                                      </DropdownMenuGroup>
-                                    </>
-                                  ) : null}
                                 </DropdownMenuContent>
                               </DropdownMenu>
                             ) : null}
                           </CardTitle>
-                          <CardDescription className="font-SUITE-Regular grid grid-cols-[3fr_1fr_6fr] text-xl">
+                          <CardDescription className="font-SUITE-Regular flex flex-row justify-between text-xl">
                             <span>{item.content.slice(0, 7)}...</span>
-                            <span className="mx-auto flex flex-row data-[status=미반영]:text-[#CCCCCC] [&[data-status=미반영]>div.mark-circle]:bg-[#CCCCCC] data-[status=처리중]:text-[#F5A623] [&[data-status=처리중]>div.mark-circle]:bg-[#F5A623] data-[status=반영됨]:text-[#50E3C2] [&[data-status=반영됨]>div.mark-circle]:bg-[#50E3C2] data-[status=반려됨]:text-[#F00] [&[data-status=반려됨]>div.mark-circle]:bg-[#F00] data-[status=보류됨]:text-[#6B8E23] [&[data-status=보류됨]>div.mark-circle]:bg-[#6B8E23]" data-status={item.status}>
-                              <div className="mark-circle m-2 flex h-3 w-3 items-center justify-center rounded-full" />
-                              {item.status}
-                            </span>
                             <span className="text-end">{item.updateTime.toDate().toLocaleString()}</span>
                           </CardDescription>
                         </CardHeader>
@@ -207,8 +150,8 @@ export default function BoardSuggestionsPage() {
               {({ inView, ref }) => (
                 <div className={`animate__animated font-SUITE-Regular flex w-full justify-end ${inView ? classToAdd : "invisible"}`} ref={ref}>
                   <Button asChild>
-                    <Link href="/board/suggestions/create">
-                      +나도 건의하기
+                    <Link href="/board/announcements/create">
+                      +공지사항 작성하기
                     </Link>
                   </Button>
                 </div>
