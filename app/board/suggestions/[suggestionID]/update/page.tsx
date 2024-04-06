@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 
 import { useEffect, useState } from "react"
 
-import { collection, onSnapshot, doc, DocumentData, updateDoc } from "firebase/firestore"
+import { collection, onSnapshot, doc, DocumentData, updateDoc, FieldValue, connectFirestoreEmulator } from "firebase/firestore"
 import { auth, db } from "@/firebase/initialization"
 
 import { AlertCircle, ChevronRight } from "lucide-react"
@@ -41,16 +41,16 @@ import {
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import {
-    Alert,
-    AlertTitle,
-    AlertDescription
+  Alert,
+  AlertTitle,
+  AlertDescription
 } from "@/components/ui/alert"
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, UseFormReturn } from "react-hook-form"
 
-export default function BoardSuggestionsUpdatePage({ params }: { params: { suggestionsID: string } }) {
+export default function BoardSuggestionsUpdatePage({ params }: { params: { suggestionID: string } }) {
 
   const router = useRouter()
 
@@ -63,10 +63,22 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
     }
   }, [user, router])
 
+  const [userDetail, setUserDetail] = useState<DocumentData>()
+
   const [suggestion, setSuggestion] = useState<DocumentData>()
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "suggestions", params.suggestionsID), (querySnapshot) => {
+    if (user && user.uid) {
+      const unsubscribe2 = onSnapshot(doc(db, "users", user.uid), (querySnapshot) => {
+        setUserDetail(querySnapshot.data())
+      })
+    }
+    
+    if (!(userDetail && userDetail.role && (user?.displayName == suggestion?.author || userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장"))) 
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "suggestions", params.suggestionID), (querySnapshot) => {
       setSuggestion(querySnapshot.data())
     })
   }, [])
@@ -84,7 +96,9 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
     content: z.string({
       required_error: "필수 입력란입니다."
     }),
-    toWhom: z.string().refine((type) => allowedToWhoms.includes(type), {
+    toWhom: z.string({
+      required_error: "필수 입력란입니다."
+    }).refine((type) => allowedToWhoms.includes(type), {
       message: "허용되지 않는 구분입니다."
     }),
     anonymous: z.boolean()
@@ -92,15 +106,20 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
 
   const form = useForm<z.infer<typeof updateSuggestionFormSchema>>({
     resolver: zodResolver(updateSuggestionFormSchema),
-    defaultValues: {
-      toWhom: suggestion?.toWhom,
-      anonymous: suggestion?.anonymous
-    }
   })
+
+  useEffect(() => {
+    if (suggestion) {
+      form.setValue('title', suggestion.title)
+      form.setValue('content', suggestion.content)
+      form.setValue('toWhom', suggestion.toWhom)
+      form.setValue('anonymous', suggestion.anonymous)
+    }
+  }, [suggestion])
 
   async function updateDocument(data: z.infer<typeof updateSuggestionFormSchema>) {
     try {
-      await updateDoc(doc(db, "suggestions", params.suggestionsID), {
+      await updateDoc(doc(db, "suggestions", params.suggestionID), {
         title: data.title,
         content: data.content,
         updateTime: new Date(),
@@ -143,7 +162,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
                     <FormItem>
                       <FormLabel>제목*</FormLabel>
                       <FormControl>
-                        <Input placeholder="제목을 입력해주세요..." {...field} defaultValue={suggestion?.title} />
+                        <Input placeholder="제목을 입력해주세요..." {...field} defaultValue={field.value} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -156,7 +175,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
                     <FormItem>
                       <FormLabel>내용*</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="건의사항을 입력해주세요..." {...field} rows={8} className="resize-none" defaultValue={suggestion?.content}/>
+                        <Textarea placeholder="건의사항을 입력해주세요..." {...field} rows={8} className="resize-none" defaultValue={field.value} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -169,10 +188,10 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
                     <FormItem>
                       <FormLabel>구분*</FormLabel>
                       <FormControl>
-                        <Select onValueChange={field.onChange} defaultValue={suggestion?.toWhom}>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger className="w-full">
-                              <SelectValue placeholder="누구에게 보내는 건의사항인지 선택하세요." />
+                              <SelectValue placeholder="누구에게 보낼지 고르세요." />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent className="font-SUITE-Regular">
@@ -197,7 +216,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
                       </div>
                       <FormControl>
                         <Switch
-                          defaultChecked={suggestion?.anonymous}
+                          checked={field.value}
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>

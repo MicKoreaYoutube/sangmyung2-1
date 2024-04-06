@@ -95,7 +95,7 @@ export function NavDropDown({ items }: dropDownProps) {
                             {item.map((itemInItem, itemInItemIndex) => (
                               <>
                                 {itemInItem.semiDropDown ? (
-                                  <DropdownMenuSub>
+                                  <DropdownMenuSub key={itemInItemIndex}>
                                     <DropdownMenuSubTrigger>
                                       {itemInItem.icon ? (
                                         <FontAwesomeIcon icon={itemInItem.icon} className="mr-2 h-4 w-4" />

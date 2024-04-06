@@ -110,7 +110,6 @@ export function MyInformation() {
   useEffect(()=>{
     if (user) {
       const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
-        console.log(doc.data())
         setUserData(doc.data())
       })
     }
