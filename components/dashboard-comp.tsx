@@ -211,7 +211,7 @@ export function MySuggestions({ whereIsThisUsed }: { whereIsThisUsed: string }) 
 
   const user = auth.currentUser
 
-  const q = whereIsThisUsed == "home" ? query(collection(db, "suggestions"), where("status", "!=", "delete"), where("author", "==", user?.displayName), limit(3)) : query(collection(db, "suggestions"), where("status", "!=", "delete"), where("author", "==", user?.displayName))
+  const q = whereIsThisUsed == "home" ? query(collection(db, "suggestions"), where("status", "!=", "delete"), limit(3)) : query(collection(db, "suggestions"), where("status", "!=", "delete"))
 
   const [suggestionsList, setSuggestionsList] = useState<DocumentData[]>([])
 
@@ -228,6 +228,8 @@ export function MySuggestions({ whereIsThisUsed }: { whereIsThisUsed: string }) 
     })
   }, [suggestionsList, q])
 
+  const suggestionsListFiltered = suggestionsList.filter(suggestion => suggestion.author == user?.displayName)
+
   return (
     <>
       <Card className="w-full">
@@ -236,19 +238,23 @@ export function MySuggestions({ whereIsThisUsed }: { whereIsThisUsed: string }) 
           <CardDescription className="font-SUITE-Regular text-lg">최근에 어떤 건의사항을 작성했는지 나옵니다.</CardDescription>
         </CardHeader>
         <CardContent>
-          <h1 className="font-KBO-Dia-Gothic_bold text-xl">최근에 작성한 건의사항: {suggestionsList.length}</h1>
-          {suggestionsList.map(
+          <h1 className="font-KBO-Dia-Gothic_bold text-xl">최근에 작성한 건의사항: {suggestionsListFiltered.length}</h1>
+          {suggestionsListFiltered.map(
             (item, index) => (
-              <Card className="my-4 w-full" key={index}>
-                <CardHeader>
-                  <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">
-                    <Link href={`/board/suggestions/${item.id}`} className="underline-offset-2 hover:underline">
-                      {item.title}
-                    </Link>
-                  </CardTitle>
-                  <CardDescription className="font-SUITE-Regular text-xl">{item.content.slice(0, 7)}</CardDescription>
-                </CardHeader>
-              </Card>
+              <>
+                {item.author == user?.displayName ? (
+                  <Card className="my-4 w-full" key={index}>
+                    <CardHeader>
+                      <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">
+                        <Link href={`/board/suggestions/${item.id}`} className="underline-offset-2 hover:underline">
+                          {item.title}
+                        </Link>
+                      </CardTitle>
+                      <CardDescription className="font-SUITE-Regular text-xl">{item.content.slice(0, 7)}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                ) : null}
+              </>
             )
           )}
         </CardContent>
