@@ -47,7 +47,7 @@ export default function BoardAnnouncementsPage() {
 
   const classToAdd = "animate__fadeInUp"
 
-  const q = query(collection(db, "suggestions"), orderBy("updateTime", "desc"))
+  const q = query(collection(db, "announcements"), orderBy("updateTime", "desc"))
 
   const { toast } = useToast()
 
@@ -69,7 +69,7 @@ export default function BoardAnnouncementsPage() {
       })
       setAnnouncementsList(announcements)
     })
-  }, [])
+  }, [q])
 
   useEffect(()=>{
     if (user) {
@@ -85,12 +85,12 @@ export default function BoardAnnouncementsPage() {
         <div className="grid gap-3 text-center">
           <InView triggerOnce={true} threshold={1} delay={1000}>
             {({ inView, ref }) => (
-              <h1 className={`font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl ${inView ? classToAdd : "invisible"}`} ref={ref}>건의사항</h1>
+              <h1 className={`font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl ${inView ? classToAdd : "invisible"}`} ref={ref}>공지사항</h1>
             )}
           </InView>
           <InView triggerOnce={true} threshold={1} delay={1500}>
             {({ inView, ref }) => (
-              <span className={`font-SUITE-Regular text-md animate__animated md:text-xl ${inView ? classToAdd : "invisible"}`} ref={ref}>지금까지 올라온 모든 건의사항들을 확인해보세요!</span>
+              <span className={`font-SUITE-Regular text-md animate__animated md:text-xl ${inView ? classToAdd : "invisible"}`} ref={ref}>지금까지 올라온 모든 공지사항들을 확인해보세요!</span>
             )}
           </InView>
         </div>
@@ -116,13 +116,13 @@ export default function BoardAnnouncementsPage() {
                                   <DropdownMenuLabel className="font-KBO-Dia-Gothic_bold text-lg">작업</DropdownMenuLabel>
                                   <DropdownMenuSeparator />
                                   <DropdownMenuGroup className="font-SUITE-Regular">
-                                    <Link href={`/board/suggestions/${item.id}/update`}>
+                                    <Link href={`/board/announcements/${item.id}/update`}>
                                       <DropdownMenuItem>
                                         <Pencil className="mr-2 h-4 w-4" />
                                         <span>수정</span>
                                       </DropdownMenuItem>
                                     </Link>
-                                    <Link href={`/board/suggestions/${item.id}/delete`}>
+                                    <Link href={`/board/announcements/${item.id}/delete`}>
                                       <DropdownMenuItem>
                                         <Trash2 className="mr-2 h-4 w-4" />
                                         <span>삭제</span>

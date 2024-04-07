@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 
 import Link from "next/link"
 
-import { doc, updateDoc, onSnapshot, DocumentData } from "firebase/firestore"
+import { doc, updateDoc, onSnapshot, DocumentData, query, collection, orderBy, where, limit } from "firebase/firestore"
 import { auth, db } from "@/firebase/initialization"
 
 import { AlertCircle } from "lucide-react"
@@ -21,7 +21,6 @@ import {
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -107,7 +106,7 @@ export function MyInformation() {
     })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (user) {
       const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
         setUserData(doc.data())
@@ -126,7 +125,7 @@ export function MyInformation() {
           <div className="font-KBO-Dia-Gothic_bold flex flex-col gap-4 text-2xl">
             <div className="flex flex-row gap-3">
               <Avatar className="h-16 w-16">
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={`${user?.photoURL}`} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
@@ -209,54 +208,50 @@ export function MyInformation() {
 }
 
 export function MySuggestions({ whereIsThisUsed }: { whereIsThisUsed: string }) {
+
+  const user = auth.currentUser
+
+  const q = whereIsThisUsed == "home" ? query(collection(db, "suggestions"), where("status", "!=", "delete"), where("author", "==", user?.displayName), limit(3)) : query(collection(db, "suggestions"), where("status", "!=", "delete"), where("author", "==", user?.displayName))
+
+  const [suggestionsList, setSuggestionsList] = useState<DocumentData[]>([])
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const suggestions: DocumentData[] = []
+      querySnapshot.forEach((doc) => {
+        suggestions.push({
+          id: doc.id,
+          ...doc.data()
+        })
+      })
+      setSuggestionsList(suggestions)
+    })
+  }, [suggestionsList, q])
+
   return (
     <>
-
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">최근 작성한 건의 사항</CardTitle>
           <CardDescription className="font-SUITE-Regular text-lg">최근에 어떤 건의사항을 작성했는지 나옵니다.</CardDescription>
         </CardHeader>
         <CardContent>
-          <h1 className="font-KBO-Dia-Gothic_bold text-xl">최근에 작성한 건의사항: 0</h1>
-          {[0, 1, 2].map(
-            (item) => (
-              <Card className="my-4 w-full" key={item}>
+          <h1 className="font-KBO-Dia-Gothic_bold text-xl">최근에 작성한 건의사항: {suggestionsList.length}</h1>
+          {suggestionsList.map(
+            (item, index) => (
+              <Card className="my-4 w-full" key={index}>
                 <CardHeader>
-                  <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">건의사항 {item}</CardTitle>
-                  <CardDescription className="font-SUITE-Regular text-xl">내용 {item}</CardDescription>
+                  <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">
+                    <Link href={`/board/suggestions/${item.id}`} className="underline-offset-2 hover:underline">
+                      {item.title}
+                    </Link>
+                  </CardTitle>
+                  <CardDescription className="font-SUITE-Regular text-xl">{item.content.slice(0, 7)}</CardDescription>
                 </CardHeader>
               </Card>
             )
           )}
         </CardContent>
-        {whereIsThisUsed == "home" ? (
-          <CardFooter className="flex justify-end">
-            <Button className="font-SUITE-Regular">+더보기</Button>
-          </CardFooter>
-        ) : (
-          <CardFooter>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">2</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </CardFooter>
-        )}
       </Card>
     </>
   )

@@ -65,8 +65,6 @@ export default function BoardAnnouncementsCreatePage() {
 
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
-  const allowedTypes = ["학급", "학교"]
-
   const createAnnouncementFormSchema = z.object({
     title: z.string({
       required_error: "필수 입력란입니다."
@@ -85,14 +83,14 @@ export default function BoardAnnouncementsCreatePage() {
   async function createDocument(data: z.infer<typeof createAnnouncementFormSchema>) {
     if (user?.emailVerified) {
       try {
-        await addDoc(collection(db, "suggestions"), {
+        await addDoc(collection(db, "announcements"), {
           author: user?.displayName,
           title: data.title,
           content: data.content,
           createTime: new Date(),
           updateTime: new Date()
         })
-        router.push("/board/suggestions")
+        router.push("/board/announcements")
       } catch (error: any) {
         const errorCode = error.code
         const errorMessage = error.message
@@ -149,7 +147,7 @@ export default function BoardAnnouncementsCreatePage() {
                     <FormItem>
                       <FormLabel>내용*</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="건의사항을 입력해주세요..." {...field} rows={8} className="resize-none" />
+                        <Textarea placeholder="공지사항을 입력해주세요..." {...field} rows={8} className="resize-none" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -165,6 +163,16 @@ export default function BoardAnnouncementsCreatePage() {
                   </Alert>
                 ) : null}
                 <h1 className="text-sm">* 표시는 필수 입력란입니다.</h1>
+                <p className="text-sm text-muted-foreground">
+                  작성하기 버튼을 누르실 경우, 당신은 {" "}
+                  <Link
+                    href="/terms"
+                    className="underline underline-offset-4 hover:text-primary"
+                  >
+                    이용약관
+                  </Link>
+                  에 동의한 것으로 간주합니다.
+                </p>
                 <div className="flex justify-end">
                   <Button type="submit">작성하기</Button>
                 </div>

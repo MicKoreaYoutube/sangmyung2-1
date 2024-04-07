@@ -48,9 +48,9 @@ import {
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, UseFormReturn } from "react-hook-form"
+import { useForm } from "react-hook-form"
 
-export default function BoardSuggestionsUpdatePage({ params }: { params: { suggestionID: string } }) {
+export default function BoardAnnouncementUpdatePage({ params }: { params: { announcementID: string } }) {
 
   const router = useRouter()
 
@@ -63,33 +63,33 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
     }
   }, [user, router])
 
-  const [suggestion, setSuggestion] = useState<DocumentData>()
+  const [announcement, setAnnouncement] = useState<DocumentData>()
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "suggestions", params.suggestionID), (querySnapshot) => {
-      setSuggestion(querySnapshot.data())
+    const unsubscribe = onSnapshot(doc(db, "announcements", params.announcementID), (querySnapshot) => {
+      setAnnouncement(querySnapshot.data())
     })
-  }, [])
+  }, [params.announcementID])
 
   useEffect(() => {
     if (user) {
       const unsubscribe2 = onSnapshot(doc(db, "users", user.uid), (querySnapshot) => {
         const userDetail = querySnapshot.data()
         console.log(querySnapshot.data())
-        if (userDetail && userDetail.role && (user?.displayName == suggestion?.author || userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장")) {
+        if (userDetail && userDetail.role && (user?.displayName == announcement?.author || userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장")) {
           console.log("권한이 충분합니다.")
         } else {
           alert("권한이 부족합니다.")
         }
       })
     }
-  }, [user])
+  }, [user, announcement?.author])
 
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
   const allowedToWhoms = ["학급", "학교"]
 
-  const updateSuggestionFormSchema = z.object({
+  const updateAnnouncementFormSchema = z.object({
     title: z.string({
       required_error: "필수 입력란입니다."
     }).refine((value) => 3 <= value.length && value.length <= 128, {
@@ -98,38 +98,28 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
     content: z.string({
       required_error: "필수 입력란입니다."
     }),
-    toWhom: z.string({
-      required_error: "필수 입력란입니다."
-    }).refine((type) => allowedToWhoms.includes(type), {
-      message: "허용되지 않는 구분입니다."
-    }),
-    anonymous: z.boolean()
   })
 
-  const form = useForm<z.infer<typeof updateSuggestionFormSchema>>({
-    resolver: zodResolver(updateSuggestionFormSchema),
+  const form = useForm<z.infer<typeof updateAnnouncementFormSchema>>({
+    resolver: zodResolver(updateAnnouncementFormSchema),
   })
 
   useEffect(() => {
-    if (suggestion) {
-      form.setValue('title', suggestion.title)
-      form.setValue('content', suggestion.content)
-      form.setValue('toWhom', suggestion.toWhom)
-      form.setValue('anonymous', suggestion.anonymous)
+    if (announcement) {
+      form.setValue('title', announcement.title)
+      form.setValue('content', announcement.content)
     }
-  }, [suggestion])
+  }, [announcement, form])
 
-  async function updateDocument(data: z.infer<typeof updateSuggestionFormSchema>) {
+  async function updateDocument(data: z.infer<typeof updateAnnouncementFormSchema>) {
     if (user?.emailVerified) {
       try {
-        await updateDoc(doc(db, "suggestions", params.suggestionID), {
+        await updateDoc(doc(db, "announcements", params.announcementID), {
           title: data.title,
           content: data.content,
-          updateTime: new Date(),
-          toWhom: data.toWhom,
-          anonymous: data.anonymous
+          updateTime: new Date()
         })
-        router.push("/board/suggestions")
+        router.push("/board/announcements")
       } catch (error: any) {
         const errorCode = error.code
         const errorMessage = error.message
@@ -152,16 +142,16 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
     <>
       <section className="container grid gap-7 py-20 md:px-40">
         <div className="grid gap-3 text-center">
-          <h1 className="font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl">나도 건의하기</h1>
-          <span className="font-SUITE-Regular text-md animate__animated md:text-xl">직접 우리반 또는 학교에 건의해보세요!</span>
+          <h1 className="font-KBO-Dia-Gothic_bold animate__animated text-5xl md:text-7xl">공지사항 작성하기</h1>
+          <span className="font-SUITE-Regular text-md animate__animated md:text-xl">학급에 할 중요한 공지사항을 작성해보세요!</span>
         </div>
         <Card>
           <div className="flex justify-end">
             <Link href="/board/suggestions" className={buttonVariants({ variant: "ghost" }) + "font-SUITE-Regular px-2 absolute m-2"}><ChevronRight /></Link>
           </div>
           <CardHeader>
-            <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">건의사항 수정하기</CardTitle>
-            <CardDescription className="font-SUITE-Regular text-md md:text-xl">여러분이 생각하는 우리반에서 고쳐야 할 점이나 학교에 대한 건의사항, 사이트에 대한 것 등을 건의해주세요!</CardDescription>
+            <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">공지사항 수정하기</CardTitle>
+            <CardDescription className="font-SUITE-Regular text-md md:text-xl">공지사항은 관리자가 올리는 게시물입니다. 한 단어 한 단어 주의해가며 수정해주세요!</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -186,51 +176,9 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
                     <FormItem>
                       <FormLabel>내용*</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="건의사항을 입력해주세요..." {...field} rows={8} className="resize-none" defaultValue={field.value} />
+                        <Textarea placeholder="공지사항을 입력해주세요..." {...field} rows={8} className="resize-none" defaultValue={field.value} />
                       </FormControl>
                       <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="toWhom"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>구분*</FormLabel>
-                      <FormControl>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="누구에게 보낼지 고르세요." />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className="font-SUITE-Regular">
-                            <SelectItem value="학급">학급</SelectItem>
-                            <SelectItem value="학교">학교</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="anonymous"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">
-                          익명 여부
-                        </FormLabel>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
                     </FormItem>
                   )}
                 />

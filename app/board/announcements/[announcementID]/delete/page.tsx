@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 
-export default function BoardSuggestionsDeletePage({ params }: { params: { suggestionID: string } }) {
+export default function BoardSuggestionsDeletePage({ params }: { params: { announcementID: string } }) {
 
   const router = useRouter()
 
@@ -32,20 +32,20 @@ export default function BoardSuggestionsDeletePage({ params }: { params: { sugge
 
   useEffect(()=>{
     if (activateDialogButtonRef.current) activateDialogButtonRef.current.click()
-  }, [activateDialogButtonRef.current])
+  }, [])
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "suggestions", params.suggestionID), (querySnapshot) => {
+    const unsubscribe = onSnapshot(doc(db, "announcements", params.announcementID), (querySnapshot) => {
       setSuggestion(querySnapshot.data())
     })
-  }, [])
+  }, [params.announcementID])
 
   async function deleteDocument() {
     try {
-      await updateDoc(doc(db, "suggestions", params.suggestionID), {
+      await updateDoc(doc(db, "announcements", params.announcementID), {
         status: "delete"
       })
-      router.push("/board/suggestions")
+      router.push("/board/announcements")
     } catch (error: any) {
       if (activateDialogButtonRef.current) activateDialogButtonRef.current.click()
       const errorCode = error.code
@@ -67,7 +67,7 @@ export default function BoardSuggestionsDeletePage({ params }: { params: { sugge
           <AlertDialogHeader className="text-red-500">
             <AlertDialogTitle className="font-KBO-Dia-Gothic_bold md:text-2xl">{error && error.errorCode ? error.errorCode : "진짜로 삭제하시겠습니까?"}</AlertDialogTitle>
             <AlertDialogDescription className="font-SUITE-Regular md:text-lg">
-              {error && error.errorCode ? error.errorMessage : "건의 사항을 삭제하시면 건의 사항과 그 게시물의 댓글도 전부 삭제됩니다. 그래도 진짜로 삭제하시겠습니까?"}
+              {error && error.errorCode ? error.errorMessage : "공지 사항을 삭제하시면 공지 사항과 그 게시물의 댓글도 전부 삭제됩니다. 그래도 진짜로 삭제하시겠습니까?"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="font-TheJamsil5Bold">

@@ -1,6 +1,9 @@
 'use client'
 
-import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+
+import { auth } from "@/firebase/initialization"
 
 import { dashboardSidebarContent } from "@/config/site"
 
@@ -33,6 +36,17 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const [isCollapsed, collapsedStateChanger] = useState(false)
+
+  const router = useRouter()
+
+  const user = auth.currentUser
+
+  useEffect(()=>{
+    if (user == null) {
+      alert("로그인 후 이용해주세요!")
+      router.push("/auth/login")
+    }
+  }, [user, router])
 
   return (
     <>

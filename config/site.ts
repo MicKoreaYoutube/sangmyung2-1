@@ -16,7 +16,7 @@ const siteConfig = {
       linkList: [
         {
           title: "공지사항",
-          href: "/11"
+          href: "/board/announcements"
         },
         {
           title: "이용약관",
@@ -65,11 +65,11 @@ const siteConfig = {
       content: [
         {
           title: "건의함",
-          href: "/21"
+          href: "/board/suggestions"
         },
         {
           title: "공지사항",
-          href: "/22"
+          href: "/board/announcements"
         }
       ]
     },
@@ -78,11 +78,11 @@ const siteConfig = {
       content: [
         {
           title: "깃허브",
-          href: "/31"
+          href: "https://github.com/MicKoreaYoutube/mic-next-template"
         },
         {
           title: "릴리스 노트",
-          href: "/32"
+          href: "/releaseNote"
         },
       ]
     },
@@ -108,74 +108,6 @@ const siteConfig = {
     micInstagram: "https://instagram.com/leejunsibal",
     micGithub: "https://github.com/MicKoreaYoutube/mic-next-template"
   },
-  docsSidebarContent: [
-    {
-      title: "1번줄",
-      content: [
-        {
-          title: "11번 내용",
-          doc: "<p className='text-2xl'>시발</p>",
-          chapter: ["test1", "test2", "test3"]
-        },
-        {
-          title: "12번 내용",
-        },
-        {
-          title: "13번 내용",
-        }
-      ]
-    },
-    {
-      title: "2번줄",
-      href: true,
-      content: [
-        {
-          title: "21번 내용",
-        },
-        {
-          title: "22번 내용",
-        },
-        {
-          title: "23번 내용",
-        }
-      ]
-    },
-    {
-      title: "3번줄",
-      content: [
-        {
-          title: "31번 내용",
-        },
-        {
-          title: "32번 내용",
-        },
-        {
-          title: "33번 내용",
-          doc: "와 개 좆같다 ㄹㅇ"
-        }
-      ]
-    },
-    {
-      title: "4번줄",
-      href: true,
-      doc: "<div className='h-full bg-red-500 text-2xl font-KBO-Dia-Gothic_bold' id='chapter-test1'>무적 LG!</div>",
-      chapter: ["test1", "test2", "test3"]
-    },
-    {
-      title: "5번줄",
-      content: [
-        {
-          title: "51번 내용",
-        },
-        {
-          title: "52번 내용",
-        },
-        {
-          title: "53번 내용",
-        }
-      ]
-    },
-  ],
 }
 
 if (siteConfig.mainNav[0].mainLink) {
@@ -232,7 +164,7 @@ export const navDropDownContent: dropDownItem = {
       {
         icon: ["fas", "file"],
         title: "내가 쓴 건의사항",
-        href: "/dashboard/my-suggestions"
+        href: "/dashboard/my/suggestions"
       }
     ],
     [
