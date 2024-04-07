@@ -20,11 +20,11 @@ const siteConfig = {
         },
         {
           title: "이용약관",
-          href: "/12"
+          href: "/terms"
         },
         {
           title: "릴리스 노트",
-          href: "/13"
+          href: "/releaseNote"
         },
       ]
     },
@@ -44,10 +44,6 @@ const siteConfig = {
           href: "/dashboard/my/suggestions"
         }
       ]
-    },
-    {
-      title: "문의하기",
-      href: "/muneui"
     }
   ],
   footerContent: [
@@ -56,7 +52,7 @@ const siteConfig = {
       content: [
         {
           title: "이용 약관",
-          href: "/11"
+          href: "/terms"
         },
       ]
     },

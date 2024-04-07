@@ -86,6 +86,9 @@ export default function BoardSuggestionsCreatePage() {
 
   const form = useForm<z.infer<typeof createSuggestionFormSchema>>({
     resolver: zodResolver(createSuggestionFormSchema),
+    defaultValues: {
+      anonymous: false
+    }
   })
 
   async function createDocument(data: z.infer<typeof createSuggestionFormSchema>) {

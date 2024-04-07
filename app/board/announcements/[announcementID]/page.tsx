@@ -44,7 +44,7 @@ export default function BoardSuggestionsReadPage({ params }: { params: { announc
               </div>
               <CardHeader>
                 <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-4xl">{suggestion?.title}</CardTitle>
-                <CardDescription className="font-SUITE-Regular text-md flex flex-col md:flex-row md:text-xl">
+                <CardDescription className="font-SUITE-Regular text-md flex flex-col justify-between md:flex-row md:text-xl">
                   <span>{suggestion?.author}</span>
                   <span className="md:text-end">{suggestion?.updateTime.toDate().toLocaleString()}</span>
                 </CardDescription>

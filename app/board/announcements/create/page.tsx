@@ -88,7 +88,8 @@ export default function BoardAnnouncementsCreatePage() {
           title: data.title,
           content: data.content,
           createTime: new Date(),
-          updateTime: new Date()
+          updateTime: new Date(),
+          status: "normal"
         })
         router.push("/board/announcements")
       } catch (error: any) {

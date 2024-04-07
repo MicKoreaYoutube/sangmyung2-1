@@ -61,7 +61,7 @@ export default function BoardAnnouncementsPage() {
     })
   }, [q])
 
-  useEffect(()=>{
+  useEffect(() => {
     if (user) {
       const unsubscribe2 = onSnapshot(doc(db, "users", user.uid), (querySnapshot) => {
         setUserDetail(querySnapshot.data())
@@ -85,55 +85,63 @@ export default function BoardAnnouncementsPage() {
           </InView>
         </div>
         <div className="grid gap-4">
-          {announcementsList.map(
-            (item, index) => (
-              <>
-                {item.status !== "delete" ? (
-                  <InView triggerOnce={true} threshold={1} key={index}>
-                    {({ inView, ref }) => (
-                      <Card className={`animate__animated w-full ${inView ? classToAdd : "invisible"}`} ref={ref}>
-                        <CardHeader>
-                          <CardTitle className="font-KBO-Dia-Gothic_bold flex justify-between text-3xl">
-                            <Link href={`/board/announcements/${item.id}`} className="underline-offset-2 hover:underline">
-                              {item.title}
-                            </Link>
-                            {userDetail && userDetail.role && (userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장") ? (
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="outline" size="icon"><EllipsisVertical /></Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                  <DropdownMenuLabel className="font-KBO-Dia-Gothic_bold text-lg">작업</DropdownMenuLabel>
-                                  <DropdownMenuSeparator />
-                                  <DropdownMenuGroup className="font-SUITE-Regular">
-                                    <Link href={`/board/announcements/${item.id}/update`}>
-                                      <DropdownMenuItem>
-                                        <Pencil className="mr-2 h-4 w-4" />
-                                        <span>수정</span>
-                                      </DropdownMenuItem>
-                                    </Link>
-                                    <Link href={`/board/announcements/${item.id}/delete`}>
-                                      <DropdownMenuItem>
-                                        <Trash2 className="mr-2 h-4 w-4" />
-                                        <span>삭제</span>
-                                      </DropdownMenuItem>
-                                    </Link>
-                                  </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            ) : null}
-                          </CardTitle>
-                          <CardDescription className="font-SUITE-Regular flex flex-col justify-between text-xl md:flex-row">
-                            <span>{item.content.slice(0, 7)}...</span>
-                            <span className="md:text-end">{item.updateTime.toDate().toLocaleString()}</span>
-                          </CardDescription>
-                        </CardHeader>
-                      </Card>
-                    )}
-                  </InView>
-                ) : null}
-              </>
+          {announcementsList.length ? (
+            announcementsList.map(
+              (item, index) => (
+                <>
+                  {item.status !== "delete" ? (
+                    <InView triggerOnce={true} threshold={1} key={index}>
+                      {({ inView, ref }) => (
+                        <Card className={`animate__animated w-full ${inView ? classToAdd : "invisible"}`} ref={ref}>
+                          <CardHeader>
+                            <CardTitle className="font-KBO-Dia-Gothic_bold flex justify-between text-3xl">
+                              <Link href={`/board/announcements/${item.id}`} className="underline-offset-2 hover:underline">
+                                {item.title}
+                              </Link>
+                              {userDetail && userDetail.role && (userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장") ? (
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="icon"><EllipsisVertical /></Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent>
+                                    <DropdownMenuLabel className="font-KBO-Dia-Gothic_bold text-lg">작업</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuGroup className="font-SUITE-Regular">
+                                      <Link href={`/board/announcements/${item.id}/update`}>
+                                        <DropdownMenuItem>
+                                          <Pencil className="mr-2 h-4 w-4" />
+                                          <span>수정</span>
+                                        </DropdownMenuItem>
+                                      </Link>
+                                      <Link href={`/board/announcements/${item.id}/delete`}>
+                                        <DropdownMenuItem>
+                                          <Trash2 className="mr-2 h-4 w-4" />
+                                          <span>삭제</span>
+                                        </DropdownMenuItem>
+                                      </Link>
+                                    </DropdownMenuGroup>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              ) : null}
+                            </CardTitle>
+                            <CardDescription className="font-SUITE-Regular flex flex-col justify-between text-xl md:flex-row">
+                              <span>{item.content.slice(0, 7)}...</span>
+                              <span className="md:text-end">{item.updateTime.toDate().toLocaleString()}</span>
+                            </CardDescription>
+                          </CardHeader>
+                        </Card>
+                      )}
+                    </InView>
+                  ) : null}
+                </>
+              )
             )
+          ) : (
+            <InView triggerOnce={true} threshold={1} delay={1000}>
+              {({ inView, ref }) => (
+                <h1 className={`font-TheJamsil5Bold animate__animated mx-auto my-20 text-xl md:text-3xl ${inView ? classToAdd : "invisible"}`} ref={ref}>올라온 공지사항이 없습니다.</h1>
+              )}
+            </InView>
           )}
           {user && userDetail && userDetail.role && (userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장") ? (
             <InView triggerOnce={true} threshold={1}>
