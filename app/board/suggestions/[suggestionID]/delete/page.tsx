@@ -32,13 +32,13 @@ export default function BoardSuggestionsDeletePage({ params }: { params: { sugge
 
   useEffect(()=>{
     if (activateDialogButtonRef.current) activateDialogButtonRef.current.click()
-  }, [activateDialogButtonRef.current])
+  }, [])
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "suggestions", params.suggestionID), (querySnapshot) => {
       setSuggestion(querySnapshot.data())
     })
-  }, [])
+  }, [params.suggestionID])
 
   async function deleteDocument() {
     try {
