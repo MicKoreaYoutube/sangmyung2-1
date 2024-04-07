@@ -78,7 +78,8 @@ export default function Join() {
         const user = userCredential.user
         joinStateChanger(1)
         await setDoc(doc(db, "users", user.uid), {
-          role: "일반 학생"
+          role: "일반 학생",
+          displayName: data.StudentID
         })
         if (auth.currentUser) {
           updateProfile(auth.currentUser, {

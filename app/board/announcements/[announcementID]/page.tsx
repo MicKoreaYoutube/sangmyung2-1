@@ -44,20 +44,16 @@ export default function BoardSuggestionsReadPage({ params }: { params: { announc
               </div>
               <CardHeader>
                 <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-4xl">{suggestion?.title}</CardTitle>
-                <CardDescription className="font-SUITE-Regular text-md flex flex-row md:text-xl">
+                <CardDescription className="font-SUITE-Regular text-md flex flex-col md:flex-row md:text-xl">
                   <span>{suggestion?.author}</span>
-                  <div className="mx-auto flex flex-row data-[status=미반영]:text-[#CCCCCC] data-[status=반려됨]:text-[#F00] data-[status=반영됨]:text-[#50E3C2] data-[status=보류됨]:text-[#6B8E23] data-[status=처리중]:text-[#F5A623] [&[data-status=미반영]>div.mark-circle]:bg-[#CCCCCC] [&[data-status=반려됨]>div.mark-circle]:bg-[#F00] [&[data-status=반영됨]>div.mark-circle]:bg-[#50E3C2] [&[data-status=보류됨]>div.mark-circle]:bg-[#6B8E23] [&[data-status=처리중]>div.mark-circle]:bg-[#F5A623]" data-status={suggestion?.status}>
-                    <div className="mark-circle m-2 flex h-3 w-3 items-center justify-center rounded-full" />
-                    {suggestion?.status}
-                  </div>
-                  <span className="text-end">{suggestion?.updateTime.toDate().toLocaleString()}</span>
+                  <span className="md:text-end">{suggestion?.updateTime.toDate().toLocaleString()}</span>
                 </CardDescription>
               </CardHeader>
               <CardContent className="font-SUITE-Regular space-y-3">
                 <p className="font-SUITE-Regular whitespace-pre-wrap text-lg">{suggestion?.content}</p>
               </CardContent>
               <CardFooter className="font-SUITE-Regular flex flex-col space-y-3">
-                <h1 className="text-xl">댓글 기능은 추후에 제작 예정입니다.</h1>
+                <h1 className="text-md md:text-xl">댓글 기능은 추후에 제작 예정입니다.</h1>
               </CardFooter>
             </Card>
           )}

@@ -118,7 +118,7 @@ export default function BoardAnnouncementsCreatePage() {
         </div>
         <Card>
           <div className="flex justify-end">
-            <Link href="/board/suggestions" className={buttonVariants({ variant: "ghost" }) + "font-SUITE-Regular px-2 absolute m-2"}><ChevronRight /></Link>
+            <Link href="/board/announcements" className={buttonVariants({ variant: "ghost" }) + "font-SUITE-Regular px-2 absolute m-2"}><ChevronRight /></Link>
           </div>
           <CardHeader>
             <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">공지사항 입력하기</CardTitle>

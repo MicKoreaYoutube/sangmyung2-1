@@ -174,13 +174,15 @@ export default function BoardSuggestionsPage() {
                             </DropdownMenu>
                           ) : null}
                         </CardTitle>
-                        <CardDescription className="font-SUITE-Regular grid grid-cols-[3fr_1fr_6fr] text-xl">
-                          <span>{item.content.slice(0, 7)}...</span>
-                          <span className="mx-auto flex flex-row data-[status=미반영]:text-[#CCCCCC] data-[status=반려됨]:text-[#F00] data-[status=반영됨]:text-[#50E3C2] data-[status=보류됨]:text-[#6B8E23] data-[status=처리중]:text-[#F5A623] [&[data-status=미반영]>div.mark-circle]:bg-[#CCCCCC] [&[data-status=반려됨]>div.mark-circle]:bg-[#F00] [&[data-status=반영됨]>div.mark-circle]:bg-[#50E3C2] [&[data-status=보류됨]>div.mark-circle]:bg-[#6B8E23] [&[data-status=처리중]>div.mark-circle]:bg-[#F5A623]" data-status={item.status}>
-                            <div className="mark-circle m-2 flex h-3 w-3 items-center justify-center rounded-full" />
-                            {item.status}
-                          </span>
-                          <span className="text-end">{item.updateTime.toDate().toLocaleString()}</span>
+                        <CardDescription className="font-SUITE-Regular text-xl md:grid md:grid-cols-2">
+                          <div className="flex w-full flex-row justify-between">
+                            <span>{item.content.slice(0, 7)}...</span>
+                            <span className="flex flex-row data-[status=미반영]:text-[#CCCCCC] data-[status=반려됨]:text-[#F00] data-[status=반영됨]:text-[#50E3C2] data-[status=보류됨]:text-[#6B8E23] data-[status=처리중]:text-[#F5A623] [&[data-status=미반영]>div.mark-circle]:bg-[#CCCCCC] [&[data-status=반려됨]>div.mark-circle]:bg-[#F00] [&[data-status=반영됨]>div.mark-circle]:bg-[#50E3C2] [&[data-status=보류됨]>div.mark-circle]:bg-[#6B8E23] [&[data-status=처리중]>div.mark-circle]:bg-[#F5A623]" data-status={item.status}>
+                              <div className="mark-circle m-2 flex h-3 w-3 items-center justify-center rounded-full" />
+                              {item.status}
+                            </span>
+                          </div>
+                          <span className="md:text-end">{item.updateTime.toDate().toLocaleString()}</span>
                         </CardDescription>
                       </CardHeader>
                     </Card>

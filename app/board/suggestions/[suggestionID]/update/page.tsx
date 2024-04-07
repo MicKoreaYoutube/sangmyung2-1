@@ -69,7 +69,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
     const unsubscribe = onSnapshot(doc(db, "suggestions", params.suggestionID), (querySnapshot) => {
       setSuggestion(querySnapshot.data())
     })
-  }, [])
+  }, [params.suggestionID])
 
   useEffect(() => {
     if (user) {
@@ -83,7 +83,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
         }
       })
     }
-  }, [user])
+  }, [user, suggestion?.author])
 
   const [error, setError] = useState({ isError: false, errorCode: "", errorMessage: "" })
 
@@ -117,7 +117,7 @@ export default function BoardSuggestionsUpdatePage({ params }: { params: { sugge
       form.setValue('toWhom', suggestion.toWhom)
       form.setValue('anonymous', suggestion.anonymous)
     }
-  }, [suggestion])
+  }, [suggestion, form])
 
   async function updateDocument(data: z.infer<typeof updateSuggestionFormSchema>) {
     if (user?.emailVerified) {

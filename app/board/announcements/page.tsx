@@ -19,12 +19,6 @@ import {
 import {
   Pencil,
   Trash2,
-  PencilRuler,
-  X,
-  RefreshCcw,
-  Check,
-  Ban,
-  OctagonPause,
   EllipsisVertical
 } from "lucide-react"
 import {
@@ -33,11 +27,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/components/ui/use-toast"
@@ -133,9 +123,9 @@ export default function BoardAnnouncementsPage() {
                               </DropdownMenu>
                             ) : null}
                           </CardTitle>
-                          <CardDescription className="font-SUITE-Regular flex flex-row justify-between text-xl">
+                          <CardDescription className="font-SUITE-Regular flex flex-col justify-between text-xl md:flex-row">
                             <span>{item.content.slice(0, 7)}...</span>
-                            <span className="text-end">{item.updateTime.toDate().toLocaleString()}</span>
+                            <span className="md:text-end">{item.updateTime.toDate().toLocaleString()}</span>
                           </CardDescription>
                         </CardHeader>
                       </Card>
@@ -145,7 +135,7 @@ export default function BoardAnnouncementsPage() {
               </>
             )
           )}
-          {user ? (
+          {user && userDetail && userDetail.role && (userDetail.role.includes("총관리자") || userDetail.role == "회장" || userDetail.role == "자치부장" || userDetail.role == "정보부장") ? (
             <InView triggerOnce={true} threshold={1}>
               {({ inView, ref }) => (
                 <div className={`animate__animated font-SUITE-Regular flex w-full justify-end ${inView ? classToAdd : "invisible"}`} ref={ref}>
