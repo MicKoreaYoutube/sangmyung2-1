@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `${siteConfig.name} - %s`,
   },
-  description: siteConfig.description,
+  description: "안녕하세요. 이곳은 상명중학교 2학년 1반 건의함 사이트 입니다. 상명중학교 2학년 1반은 여러분의 건의로 완성됩니다. 언제나 편하게 건의해주세요!",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
