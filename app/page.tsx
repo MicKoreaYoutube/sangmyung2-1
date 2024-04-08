@@ -4,7 +4,7 @@ import Link from "next/link"
 
 import { useState, useEffect } from "react"
 
-import { onSnapshot, query, collection, where, limit, DocumentData } from "firebase/firestore"
+import { onSnapshot, query, collection, orderBy, limit, DocumentData } from "firebase/firestore"
 import { db } from "@/firebase/initialization"
 
 import { InView } from "react-intersection-observer"
@@ -25,24 +25,26 @@ export default function Page() {
 
   const classToAdd = "animate__fadeInUp"
 
-  const q = query(collection(db, "suggestions"), where("status", "!=", "delete"), limit(3))
+  const q = query(collection(db, "suggestions"), orderBy("updateTime", "desc"), limit(3))
 
   const [suggestionsList, setSuggestionsList] = useState<DocumentData[]>([])
 
   useEffect(() => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const suggestions: DocumentData[] = []
+      let suggestions: DocumentData[] = []
       querySnapshot.forEach((doc) => {
         suggestions.push({
           id: doc.id,
           ...doc.data()
         })
       })
-      setSuggestionsList(suggestions)
+      suggestions = 
     })
   }, [q])
 
-  const q2 = query(collection(db, "announcements"), where("status", "!=", "delete"), limit(3))
+
+
+  const q2 = query(collection(db, "announcements"), orderBy("updateTime", "desc"), limit(3))
 
   const [announcementsList, setAnnouncementsList] = useState<DocumentData[]>([])
 
