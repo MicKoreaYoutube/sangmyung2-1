@@ -47,7 +47,7 @@ export default function BoardSuggestionsPage() {
 
   const classToAdd = "animate__fadeInUp"
 
-  const q = query(collection(db, "suggestions"), orderBy("updataTime", "desc"), limit(3))
+  const q = query(collection(db, "suggestions"), orderBy("updateTime", "desc"), limit(3))
 
   const [suggestionsList, setSuggestionsList] = useState<DocumentData[]>([])
   const [userDetail, setUserDetail] = useState<DocumentData>()
