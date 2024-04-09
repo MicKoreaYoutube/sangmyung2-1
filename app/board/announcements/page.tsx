@@ -50,13 +50,14 @@ export default function BoardAnnouncementsPage() {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const announcements: DocumentData[] = []
+      let announcements: DocumentData[] = []
       querySnapshot.forEach((doc) => {
         announcements.push({
           id: doc.id,
           ...doc.data()
         })
       })
+      announcements = announcements.filter((announcement) => announcement.status != "delete")
       setAnnouncementsList(announcements)
     })
   }, [q])

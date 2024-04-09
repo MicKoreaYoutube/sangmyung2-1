@@ -38,11 +38,10 @@ export default function Page() {
           ...doc.data()
         })
       })
-      suggestions = 
+      suggestions = suggestions.filter((suggestion) => suggestion.status != "delete")
+      setSuggestionsList(suggestions)
     })
   }, [q])
-
-
 
   const q2 = query(collection(db, "announcements"), orderBy("updateTime", "desc"), limit(3))
 
@@ -147,7 +146,6 @@ export default function Page() {
                 <div className={`font-TheJamsil5Bold animate__animated justify-self-end ${inView ? classToAdd : 'invisible'}`}>
                   <Link
                     href="/board/suggestions"
-                    target="_blank"
                     rel="noreferrer"
                     className={buttonVariants({ variant: "default" })}
                     ref={ref}
@@ -248,7 +246,6 @@ export default function Page() {
                 <div className={`font-TheJamsil5Bold animate__animated justify-self-end ${inView ? classToAdd : 'invisible'}`}>
                   <Link
                     href="/board/announcements"
-                    target="_blank"
                     rel="noreferrer"
                     className={buttonVariants({ variant: "default" })}
                     ref={ref}

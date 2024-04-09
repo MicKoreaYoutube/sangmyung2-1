@@ -67,6 +67,7 @@ import {
 import { ToastAction } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
 import { Toaster } from "@/components/ui/toaster"
+import { LoadingComp } from "./loading-comp"
 
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -78,7 +79,7 @@ export function MyInformation() {
 
   const { toast } = useToast()
 
-  const [userData, setUserData] = useState<DocumentData | undefined>()
+  const [userDetail, setUserDetail] = useState<DocumentData | undefined>()
 
   const allowedRoles = ["회장", "자치부장", "정보부장"]
 
@@ -109,7 +110,7 @@ export function MyInformation() {
   useEffect(() => {
     if (user) {
       const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
-        setUserData(doc.data())
+        setUserDetail(doc.data())
       })
     }
   }, [user])
@@ -126,12 +127,14 @@ export function MyInformation() {
             <div className="flex flex-row gap-3">
               <Avatar className="h-16 w-16">
                 <AvatarImage src={`${user?.photoURL}`} />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>
+                  <LoadingComp />
+                </AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <h1>학번: {user?.displayName}</h1>
-                <h1 className="flex gap-3 text-lg text-muted-foreground">
-                  <span>직급: {userData && userData.role ? userData.role : ""}</span>
+                <h1 className="text-xl md:text-3xl">학번: {user?.displayName}</h1>
+                <h1 className="flex gap-3 text-base text-muted-foreground md:text-lg">
+                  <span>직급: {userDetail && userDetail.role ? userDetail.role : ""}</span>
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button className="font-SUITE-Regular" size="sm">승진 신청</Button>
@@ -211,24 +214,23 @@ export function MySuggestions({ whereIsThisUsed }: { whereIsThisUsed: string }) 
 
   const user = auth.currentUser
 
-  const q = whereIsThisUsed == "home" ? query(collection(db, "suggestions"), where("status", "!=", "delete"), limit(3)) : query(collection(db, "suggestions"), where("status", "!=", "delete"))
+  const q = whereIsThisUsed == "home" ? query(collection(db, "suggestions"), orderBy("updateTime", "desc"), limit(3)) : query(collection(db, "suggestions"), orderBy("updateTime", "desc"))
 
   const [suggestionsList, setSuggestionsList] = useState<DocumentData[]>([])
 
   useEffect(() => {
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const suggestions: DocumentData[] = []
+      let suggestions: DocumentData[] = []
       querySnapshot.forEach((doc) => {
         suggestions.push({
           id: doc.id,
           ...doc.data()
         })
       })
+      suggestions = suggestions.filter((suggestion) => suggestion.status != "delete" && suggestion.author == user?.displayName)
       setSuggestionsList(suggestions)
     })
-  }, [suggestionsList, q])
-
-  const suggestionsListFiltered = suggestionsList.filter(suggestion => suggestion.author == user?.displayName)
+  }, [suggestionsList, q, user?.displayName])
 
   return (
     <>
@@ -238,24 +240,28 @@ export function MySuggestions({ whereIsThisUsed }: { whereIsThisUsed: string }) 
           <CardDescription className="font-SUITE-Regular text-lg">최근에 어떤 건의사항을 작성했는지 나옵니다.</CardDescription>
         </CardHeader>
         <CardContent>
-          <h1 className="font-KBO-Dia-Gothic_bold text-xl">최근에 작성한 건의사항: {suggestionsListFiltered.length}</h1>
-          {suggestionsListFiltered.map(
-            (item, index) => (
-              <>
-                {item.author == user?.displayName ? (
-                  <Card className="my-4 w-full" key={index}>
-                    <CardHeader>
-                      <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">
-                        <Link href={`/board/suggestions/${item.id}`} className="underline-offset-2 hover:underline">
-                          {item.title}
-                        </Link>
-                      </CardTitle>
-                      <CardDescription className="font-SUITE-Regular text-xl">{item.content.slice(0, 7)}</CardDescription>
-                    </CardHeader>
-                  </Card>
-                ) : null}
-              </>
+          <h1 className="font-KBO-Dia-Gothic_bold text-xl">최근에 작성한 건의사항: {suggestionsList.length}</h1>
+          {suggestionsList.length ? (
+            suggestionsList.map(
+              (item, index) => (
+                <>
+                  {item.author == user?.displayName ? (
+                    <Card className="my-4 w-full" key={index}>
+                      <CardHeader>
+                        <CardTitle className="font-KBO-Dia-Gothic_bold text-3xl">
+                          <Link href={`/board/suggestions/${item.id}`} className="underline-offset-2 hover:underline">
+                            {item.title}
+                          </Link>
+                        </CardTitle>
+                        <CardDescription className="font-SUITE-Regular text-xl">{item.content.slice(0, 7)}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  ) : null}
+                </>
+              )
             )
+          ) : (
+            <h1 className="font-TheJamsil5Bold animate__animated mx-auto my-20 text-xl md:text-3xl">올라온 건의사항이 없습니다.</h1>
           )}
         </CardContent>
       </Card>

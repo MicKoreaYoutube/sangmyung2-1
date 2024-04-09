@@ -79,12 +79,12 @@ export default function Join() {
         joinStateChanger(1)
         await setDoc(doc(db, "users", user.uid), {
           role: "일반 학생",
-          displayName: data.StudentID
+          studentID: data.StudentID
         })
         if (auth.currentUser) {
           updateProfile(auth.currentUser, {
             displayName: data.StudentID,
-            photoURL: "https://firebasestorage.googleapis.com/v0/b/sangmyung2-1.appspot.com/o/userPhoto.png?alt=media&token=9fc81f53-e883-42f9-b046-3aa9d23a51ce"
+            photoURL: "https://firebasestorage.googleapis.com/v0/b/sangmyung2-1.appspot.com/o/userPhoto%2FbasicUserImage.png?alt=media&token=439dbde6-91ae-4148-9d3c-4094a17be78b"
           }).then(() => {
             sendEmailVerification(user)
           }).catch((error) => {
