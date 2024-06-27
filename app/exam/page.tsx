@@ -1,18 +1,15 @@
 "use client"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -23,12 +20,14 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { ToastAction } from "@/components/ui/toast"
+import { useToast } from "@/components/ui/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -39,6 +38,9 @@ export default function ExamIndex() {
 
   const examList = ["1학기 중간고사", "1학기 기말고사", "2학기 중간고사", "2학기 기말고사"]
   const subjectList = ["국어", "역사", "수학", "과학", "영어", "기술가정", "일본어"]
+
+  const { toast } = useToast()
+  const router = useRouter()
 
   const examSchema = z.object({
     examName: z.string({
@@ -58,8 +60,32 @@ export default function ExamIndex() {
   })
 
   async function submitExam(data: z.infer<typeof examSchema>) {
-    console.log("hi!")
-    console.log(data)
+    if (data.examName == "1학기 중간고사") {
+      toast({
+        variant: "destructive",
+        title: "이미 시험이 끝났습니다.",
+        description: "다른 고사로 다시 시도해주세요.",
+        action: <ToastAction altText="Try again">다시 고르기</ToastAction>,
+      })
+    } else if (data.examName != "1학기 기말고사") {
+      toast({
+        variant: "destructive",
+        title: "아직 시험기간이 아닙니다.",
+        description: "다른 고사로 다시 시도해주세요.",
+        action: <ToastAction altText="Try again">다시 고르기</ToastAction>,
+      })
+    } else {
+      if (data.subjectName == "영어" || data.subjectName == "수학" || data.subjectName == "일본어") {
+        toast({
+          variant: "destructive",
+          title: "자료가 존재하지 않는 과목입니다.",
+          description: "다른 과목으로 다시 시도해주세요.",
+          action: <ToastAction altText="Try again">다시 고르기</ToastAction>,
+        })
+      } else {
+        router.push(`/exam/${data.subjectName}`)
+      }
+    }
   }
 
   return (
@@ -120,7 +146,7 @@ export default function ExamIndex() {
                         />
                         <FormField
                           control={form.control}
-                          name="examName"
+                          name="subjectName"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>과목명*</FormLabel>
@@ -155,6 +181,7 @@ export default function ExamIndex() {
           </div>
         </section>
       </div>
+      <Toaster />
     </>
   )
 }
