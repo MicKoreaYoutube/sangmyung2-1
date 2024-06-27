@@ -62,9 +62,9 @@ export default function Page() {
 
   return (
     <>
-      <div className="bg-foreground py-12">
+      <div className="bg-foreground py-20">
         <section className="container items-center md:py-10">
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-6">
             <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-center text-3xl font-extrabold leading-tight tracking-tighter text-background lg:text-5xl`}
             >
               안녕하세요. 이곳은 <br />
@@ -158,9 +158,9 @@ export default function Page() {
           </div>
         </section>
       </div>
-      <div className="bg-foreground py-12">
+      <div className="bg-foreground py-20">
         <section className="container items-center md:py-10">
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-8">
             <h1 className={`font-KBO-Dia-Gothic_bold content animate__animated text-center text-3xl font-extrabold leading-tight tracking-tighter text-background lg:text-5xl`}
             >
               <InView triggerOnce={true} threshold={1}>

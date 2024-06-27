@@ -16,15 +16,18 @@ const siteConfig = {
       linkList: [
         {
           title: "공지사항",
-          href: "/board/announcements"
+          description: "중요한 공지사항을 확인하세요!",
+          href: "/11"
         },
         {
           title: "이용약관",
-          href: "/terms"
+          description: "건의 전 이용약관을 확인해보세요!",
+          href: "/12"
         },
         {
           title: "릴리스 노트",
-          href: "/releaseNote"
+          description: "뭐가 업데이트됐는지 확인해보세요!",
+          href: "/13"
         },
       ]
     },
@@ -33,17 +36,44 @@ const siteConfig = {
       linkList: [
         {
           title: "건의함 홈",
+          description: "건의사항에 관련한 모든 것을 확인하세요!",
           href: "/board/suggestions"
         },
         {
           title: "작성하기",
+          description: "건의사항을 작성해보세요!",
           href: "/board/suggestions/create"
         },
         {
           title: "내가 올린 건의 사항",
+          description: "지금까지 올린 건의사항들을 확인해보세요!",
           href: "/dashboard/my/suggestions"
         }
       ]
+    },
+    {
+      title: "시험",
+      linkList: [
+        {
+          title: "홈",
+          description: "시험 관련 자료들을 확인하세요!",
+          href: "/exam"
+        },
+        {
+          title: "1학기 기말고사",
+          description: "1학기 기말고사를 대비해보세요!",
+          href: "/exam/1semester/final"
+        },
+        {
+          title: "그외 시험",
+          description: "그 외 시험들도 미리 확인해보세요!",
+          href: "/exam/etc"
+        }
+      ]
+    },
+    {
+      title: "문의하기",
+      href: "/muneui"
     }
   ],
   footerContent: [
