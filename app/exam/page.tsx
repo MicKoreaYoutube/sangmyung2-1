@@ -109,7 +109,7 @@ export default function ExamIndex() {
                 </p>
               )}
             </InView>
-            <InView triggerOnce={true} threshold={1} delay={4100}>
+            <InView triggerOnce={true} threshold={0.6} delay={4100}>
               {({ inView, ref }) => (
                 <Card ref={ref} className={`animate__animated min-w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
                   <CardHeader>
