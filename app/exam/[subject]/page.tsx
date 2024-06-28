@@ -1,6 +1,6 @@
 "use client"
 
-import { useRouter } from "next/navigation"
+import { useRouter, notFound } from "next/navigation"
 import {
   Card,
   CardContent,
@@ -282,6 +282,12 @@ function SubjectIndicator({ subject }: { subject: string }) {
       )
 
     case "역사":
+      return (
+        <></>
+      )
+
+    default:
+      notFound()
       return (
         <></>
       )
