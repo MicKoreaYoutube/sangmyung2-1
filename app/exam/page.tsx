@@ -111,7 +111,7 @@ export default function ExamIndex() {
             </InView>
             <InView triggerOnce={true} threshold={0.6} delay={4100}>
               {({ inView, ref }) => (
-                <Card ref={ref} className={`animate__animated min-w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                <Card ref={ref} className={`animate__animated w-[300px] md:w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
                   <CardHeader>
                     <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">시험 대비 자료 확인</CardTitle>
                     <CardDescription className="font-SUITE-Regular text-md md:text-xl">모든 시험의 자료를 확인하세요!</CardDescription>
