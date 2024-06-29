@@ -417,16 +417,22 @@ function SubjectIndicator({ subject }: { subject: string }) {
             <div className="mx-auto grid justify-center gap-4">
               <h1 className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">결과 확인</h1>
               <span className="font-SUITE-Regular text-center">성적: {correctCount} / {questionsCount}</span>
-              <Button className="font-TheJamsil5Bold" onClick={router.refresh}>다시 하기</Button>
+              <Button className="font-TheJamsil5Bold" onClick={()=>{
+                history.go(0)
+              }}>다시 하기</Button>
             </div>
           ))}
         </>
       )
 
     case "역사":
-      return (
-        <></>
-      )
+      return "제작 중..."
+
+    case "과학":
+      return "제작 중..."
+
+    case "기술가정":
+      return "제작 중..."
 
     default:
       notFound()
