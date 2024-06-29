@@ -1,6 +1,8 @@
 "use client"
 
+import Link from "next/link"
 import { useRouter, notFound } from "next/navigation"
+
 import {
   Card,
   CardContent,
@@ -24,7 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -35,6 +37,8 @@ import { z } from "zod"
 
 import { InView } from "react-intersection-observer"
 import { useState } from "react"
+
+import { ChevronRight } from "lucide-react"
 
 interface questionListType {
   unit: string
@@ -70,6 +74,9 @@ export default function ExamDetail({ params }: { params: { subject: string } }) 
             <InView triggerOnce={true} threshold={0.6} delay={4100}>
               {({ inView, ref }) => (
                 <Card ref={ref} className={`animate__animated min-w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                  <div className="flex justify-end">
+                    <Link href="/exam" className={buttonVariants({ variant: "ghost" }) + "font-SUITE-Regular px-2 absolute m-2"}><ChevronRight /></Link>
+                  </div>
                   <CardHeader>
                     <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">{decodeURI(params.subject)} 시험 대비 자료 확인</CardTitle>
                     <CardDescription className="font-SUITE-Regular text-md md:text-xl">{decodeURI(params.subject)} 시험의 자료를 확인하세요!</CardDescription>
@@ -397,7 +404,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
                   />
                   <div className="font-TheJamsil5Bold flex justify-end">
                     {explanation ? (
-                      <Button onClick={(e)=>{
+                      <Button onClick={(e) => {
                         e.preventDefault()
                         setExplanation(null)
                         if (questionList.length == currentQuestion + 1) {
@@ -417,7 +424,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
             <div className="mx-auto grid justify-center gap-4">
               <h1 className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">결과 확인</h1>
               <span className="font-SUITE-Regular text-center">성적: {correctCount} / {questionsCount}</span>
-              <Button className="font-TheJamsil5Bold" onClick={()=>{
+              <Button className="font-TheJamsil5Bold" onClick={() => {
                 history.go(0)
               }}>다시 하기</Button>
             </div>

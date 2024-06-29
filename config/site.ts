@@ -53,23 +53,7 @@ const siteConfig = {
     },
     {
       title: "시험",
-      linkList: [
-        {
-          title: "홈",
-          description: "시험 관련 자료들을 확인하세요!",
-          href: "/exam"
-        },
-        {
-          title: "1학기 기말고사",
-          description: "1학기 기말고사를 대비해보세요!",
-          href: "/exam/1semester/final"
-        },
-        {
-          title: "그외 시험",
-          description: "그 외 시험들도 미리 확인해보세요!",
-          href: "/exam/etc"
-        }
-      ]
+      href: "/exam"
     },
     {
       title: "문의하기",
