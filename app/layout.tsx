@@ -30,6 +30,11 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
+  verification: {
+    other: {
+      "naver-site-verification": "48c4f7bf557235c8c112c028d028b931624bb958",
+    },
+  },
 }
 
 interface RootLayoutProps {
