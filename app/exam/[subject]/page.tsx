@@ -19,6 +19,7 @@ import {
   Form,
   FormControl,
   FormField,
+  FormDescription,
   FormItem,
   FormLabel,
   FormMessage,
@@ -87,6 +88,8 @@ export default function ExamDetail({ params }: { params: { subject: string } }) 
 }
 
 function SubjectIndicator({ subject }: { subject: string }) {
+
+  const router = useRouter()
 
   const unitList = ["동백꽃", "양반전", "둘 다"]
   const questionFormatList = ["객관식 - 단어 맞추기", "주관식", "객관식 - 뜻 맞추기"]
@@ -157,6 +160,9 @@ function SubjectIndicator({ subject }: { subject: string }) {
     }
   }
   const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [explanation, setExplanation] = useState<string | null>("")
+  const [correctCount, addCorrectCount] = useState(0)
+  const [questionsCount, setQuestionCount] = useState(0)
 
   const examSchema = z.object({
     unitName: z.enum(["동백꽃", "양반전", "둘 다"], {
@@ -188,7 +194,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
   })
 
   function submitExam(data: z.infer<typeof examSchema>) {
-    console.log(data)
+    setQuestionCount(Number(data.questionNum))
     setKoreanState("examPage")
     for (let i = 1; i <= Number(data.questionNum); i++) {
       const questionFormat = data.questionFormat[Math.floor(Math.random() * data.questionFormat.length)]
@@ -234,7 +240,12 @@ function SubjectIndicator({ subject }: { subject: string }) {
   }
 
   function submitAnswer(data: z.infer<typeof koreaExamSchema>) {
-    
+    if (data.answer == questionList[currentQuestion].answer) {
+      setExplanation("정답!")
+      addCorrectCount(correctCount + 1)
+    } else {
+      setExplanation(`오답ㅠ 정답은: ${questionList[currentQuestion].answer}`)
+    }
   }
 
   switch (subject) {
@@ -342,12 +353,12 @@ function SubjectIndicator({ subject }: { subject: string }) {
                   )}
                 />
                 <div className="flex justify-end">
-                  <Button type="submit">확인하기</Button>
+                  <Button type="submit" className="font-TheJamsil5Bold">확인하기</Button>
                 </div>
               </form>
             </Form>
-          ) : (
-            <div>
+          ) : (koreanState == "examPage" ? (
+            <div className={explanation ? (explanation == "정답!" ? "text-green-500" : "text-red-500") : ""}>
               <h1 className="font-KBO-Dia-Gothic_bold text-md md:text-xl">{currentQuestion + 1}. {questionList[currentQuestion].question}</h1>
               <Form {...form2}>
                 <form onSubmit={form2.handleSubmit(submitAnswer)} className="font-SUITE-Regular space-y-6">
@@ -379,17 +390,36 @@ function SubjectIndicator({ subject }: { subject: string }) {
                             <Input placeholder="정답 입력..." {...field} />
                           )}
                         </FormControl>
+                        <FormDescription className="text-md md:text-xl">{explanation}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <div className="flex justify-end">
-                    <Button type="submit">확인하기</Button>
+                  <div className="font-TheJamsil5Bold flex justify-end">
+                    {explanation ? (
+                      <Button onClick={(e)=>{
+                        e.preventDefault()
+                        setExplanation(null)
+                        if (questionList.length == currentQuestion + 1) {
+                          setKoreanState("endPage")
+                        } else {
+                          setCurrentQuestion(currentQuestion + 1)
+                        }
+                      }}>다음</Button>
+                    ) : (
+                      <Button type="submit">제출</Button>
+                    )}
                   </div>
                 </form>
               </Form>
             </div>
-          )}
+          ) : (
+            <div className="mx-auto grid justify-center gap-4">
+              <h1 className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">결과 확인</h1>
+              <span className="font-SUITE-Regular text-center">성적: {correctCount} / {questionsCount}</span>
+              <Button className="font-TheJamsil5Bold" onClick={router.refresh}>다시 하기</Button>
+            </div>
+          ))}
         </>
       )
 
