@@ -92,7 +92,11 @@ function SubjectIndicator({ subject }: { subject: string }) {
   const [koreanState, setKoreanState] = useState("startPage")
   let questions: questionListType[] = []
   const [questionList, setQuestionList] = useState<questionListType[]>([])
-  const wordList = {
+  const wordList:{
+    [key: string]: {
+      [key: string]: string
+    },
+  } = {
     "동백꽃": {
       "횃소리": "날짐승이 크게 날갯짓을 하면서 탁탁 치는 소리.",
       "실팍하다": "사람이나 물건 따위가 보기에 매우 실하다.",
@@ -120,7 +124,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
       "알싸하다": "매운맛이나 독한 냄새 따위로 코 속이나 혀끝이 알알하다."
     },
     "양반전": {
-      "사족": "선비나 무인(人)의 집안. 또는 그 자손.",
+      "사족": "선비나 무인(武人)의 집안. 또는 그 자손.",
       "군수": "조선 시대에 둔, 지방 행정 단위인 군의 으뜸 벼슬.",
       "환자": "환곡. 조선 시대에, 각 고을에서 봄에 백성들에게 곡식을 꾸어 주고 가을에 이자를 붙여 거두던 일. 또는 그 곡식.",
       "섬": "부피의 단위, 곡식, 가루, 액체 따위의 부피를 잴 때 쓴다.",
@@ -133,7 +137,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
       "벙거지": "조선 시대에 궁중 또는 양반집의 하인이 쓰던 털로 만든 모자.",
       "잠방이": "가랑이가 무릎까지 내려오도록 짧게 만든 홑바지.",
       "소인": "신분이 낮은 사람이 자기보다 신분이 높은 사람에게 자기를 가리키는 말.",
-      "사사로이": "공적(公)이 아닌 개인적인 범위나 관계의 성질이 있게.",
+      "사사로이": "공적(公的)이 아닌 개인적인 범위나 관계의 성질이 있게.",
       "빌미": "재앙이나 탈 따위가 생기는 원인.",
       "증서": "권리나 의무, 사실 따위를 증명하는 문서.",
       "좌수": "조선시대에, 지방의 자치기구인 향청의 우두머리.",
@@ -142,7 +146,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
       "오경": "하룻밤을 다섯 부분으로 나누었을 때 맨 마지막 부분. 새벽 세 시에서 다섯 시 사이이다.",
       "마소": "말과 소를 아울러 이르는 말.",
       "삼성": "오리온자리에 있는 별들. 중앙에 나란히 있는 세 개의 큰 별을 '삼형제별'이라 한다.",
-      "사농공상": "예전에, 백성을 나누던 네 가지 계급, 선비, 농부, 공장(匠), 상인을 이르던 말이다.",
+      "사농공상": "예전에, 백성을 나누던 네 가지 계급, 선비, 농부, 공장(工匠), 상인을 이르던 말이다.",
       "홍패": "문과 급제자에게 주던 합격증서.",
       "음관": "과거를 거치지 아니하고 조상의 공덕에 의하여 맡은 벼슬. 또는 그런 벼슬아치.",
       "일산": "햇볕을 가리기 위하여 세우는 큰 양산. 우산보다 크며 놀이할 때에 한데에다 세운다.",
@@ -154,10 +158,8 @@ function SubjectIndicator({ subject }: { subject: string }) {
   const [currentQuestion, setCurrentQuestion] = useState()
 
   const examSchema = z.object({
-    unitName: z.string({
+    unitName: z.enum(["동백꽃", "양반전", "둘 다"], {
       required_error: "필수 입력란입니다."
-    }).refine(unit => unitList.includes(unit), {
-      message: "존재하지 않는 단원입니다."
     }),
     questionFormat: z.array(z.string()).refine((value) => value.some((item) => item), {
       message: "반드시 하나 이상을 선택해야 합니다.",
@@ -187,16 +189,29 @@ function SubjectIndicator({ subject }: { subject: string }) {
   function submitExam(data: z.infer<typeof examSchema>) {
     console.log(data)
     setKoreanState("examPage")
-    const questionFormat = data.questionFormat[Math.floor(Math.random() * data.questionFormat.length)]
-    const unit = data.unitName == "둘 다" ? (Math.random() > 0.5 ? "동백꽃" : "양반전") : data.unitName
     for (let i = 1; i <= Number(data.questionNum); i++) {
+      const questionFormat = data.questionFormat[Math.floor(Math.random() * data.questionFormat.length)]
+      const unit = data.unitName == "둘 다" ? (Math.random() > 0.5 ? "동백꽃" : "양반전") : data.unitName
+      const unitKeyList = Object.keys(wordList[unit])
+      let randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
+      questions.forEach((question)=>{
+        while (question.question == randomWord || question.answer == randomWord) {
+          randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
+        }
+      })
+      let choices: string[] = []
+      for (let j = 1; j <= 4; j++) {
+        
+      }
       questions.push({
         unit: unit,
         questionFormat: questionFormat,
-        question: "하이!",
-        answer: ""
+        question: questionFormat == "객관식 - 뜻 맞추기" ? randomWord : wordList[unit][randomWord],
+        choices: questionFormat.includes("객관식") ? ["1", "2", "3", "4", "5"] : undefined,
+        answer: questionFormat == "객관식 - 뜻 맞추기" ? wordList[unit][randomWord] : randomWord
       })
     }
+    console.table(questions)
   }
 
   function submitAnswer(data: z.infer<typeof koreaExamSchema>) {
