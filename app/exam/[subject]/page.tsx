@@ -130,7 +130,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
       "삭정이": "살아 있는 나무에 붙어 있는, 말라 죽은 가지.",
       "싱둥겅둥": "건성건성, 정성을 들이지 않고 대강대강 일을 하는 모양.",
       "호드기": "봄철에 물오른 버드나무 가지의 껍질을 고루 비틀어 뽑은 껍질이나 짤막한 밀짚 토막 따위로 만든 피리.",
-      "빈사지경(瀕死地境)": "거의 죽게 된 처지나 형편.",
+      "빈사지경": "거의 죽게 된 처지나 형편.",
       "걱실걱실히": "성질이 너그러워 말과 행동을 시원스럽게 하는 모양.",
       "알싸하다": "매운맛이나 독한 냄새 따위로 코 속이나 혀끝이 알알하다."
     },
@@ -335,7 +335,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
                   name="questionNum"
                   render={({ field }) => (
                     <FormItem className="space-y-3">
-                      <FormLabel>문제 수</FormLabel>
+                      <FormLabel>문제 수*</FormLabel>
                       <FormControl>
                         <RadioGroup
                           onValueChange={field.onChange}
