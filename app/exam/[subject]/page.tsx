@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -69,8 +70,8 @@ export default function ExamDetail({ params }: { params: { subject: string } }) 
               {({ inView, ref }) => (
                 <Card ref={ref} className={`animate__animated min-w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
                   <CardHeader>
-                    <CardTitle className="font-KBO-Dia-Gothic_bold">{decodeURI(params.subject)} 시험 대비 자료 확인</CardTitle>
-                    <CardDescription className="font-SUITE-Regular">{decodeURI(params.subject)} 시험의 자료를 확인하세요!</CardDescription>
+                    <CardTitle className="font-KBO-Dia-Gothic_bold text-2xl md:text-3xl">{decodeURI(params.subject)} 시험 대비 자료 확인</CardTitle>
+                    <CardDescription className="font-SUITE-Regular text-md md:text-xl">{decodeURI(params.subject)} 시험의 자료를 확인하세요!</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <SubjectIndicator subject={decodeURI(params.subject)} />
@@ -92,7 +93,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
   const [koreanState, setKoreanState] = useState("startPage")
   let questions: questionListType[] = []
   const [questionList, setQuestionList] = useState<questionListType[]>([])
-  const wordList:{
+  const wordList: {
     [key: string]: {
       [key: string]: string
     },
@@ -155,7 +156,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
       "맹랑하다": "생각하던 바와 달리 허망하다."
     }
   }
-  const [currentQuestion, setCurrentQuestion] = useState()
+  const [currentQuestion, setCurrentQuestion] = useState(0)
 
   const examSchema = z.object({
     unitName: z.enum(["동백꽃", "양반전", "둘 다"], {
@@ -194,28 +195,46 @@ function SubjectIndicator({ subject }: { subject: string }) {
       const unit = data.unitName == "둘 다" ? (Math.random() > 0.5 ? "동백꽃" : "양반전") : data.unitName
       const unitKeyList = Object.keys(wordList[unit])
       let randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
-      questions.forEach((question)=>{
+      questions.forEach((question) => {
         while (question.question == randomWord || question.answer == randomWord) {
           randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
         }
       })
       let choices: string[] = []
-      for (let j = 1; j <= 4; j++) {
-        
+      if (questionFormat == "객관식 - 뜻 맞추기") {
+        for (let j = 1; j <= 4; j++) {
+          let randomChoices = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
+          while (choices.includes(wordList[unit][randomChoices]) || randomChoices == randomWord) {
+            randomChoices = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
+          }
+          choices.push(wordList[unit][randomChoices])
+        }
+        choices.push(wordList[unit][randomWord])
+      } else {
+        for (let j = 1; j <= 4; j++) {
+          let randomChoices = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
+          while (choices.includes(randomChoices) || randomChoices == randomWord) {
+            randomChoices = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
+          }
+          choices.push(randomChoices)
+        }
+        choices.push(randomWord)
       }
+      choices.sort(() => Math.random() - 0.5)
       questions.push({
         unit: unit,
         questionFormat: questionFormat,
         question: questionFormat == "객관식 - 뜻 맞추기" ? randomWord : wordList[unit][randomWord],
-        choices: questionFormat.includes("객관식") ? ["1", "2", "3", "4", "5"] : undefined,
+        choices: questionFormat.includes("객관식") ? choices : undefined,
         answer: questionFormat == "객관식 - 뜻 맞추기" ? wordList[unit][randomWord] : randomWord
       })
     }
-    console.table(questions)
+    console.log(questions)
+    setQuestionList(questions)
   }
 
   function submitAnswer(data: z.infer<typeof koreaExamSchema>) {
-
+    
   }
 
   switch (subject) {
@@ -328,7 +347,8 @@ function SubjectIndicator({ subject }: { subject: string }) {
               </form>
             </Form>
           ) : (
-            <>
+            <div>
+              <h1 className="font-KBO-Dia-Gothic_bold text-md md:text-xl">{currentQuestion + 1}. {questionList[currentQuestion].question}</h1>
               <Form {...form2}>
                 <form onSubmit={form2.handleSubmit(submitAnswer)} className="font-SUITE-Regular space-y-6">
                   <FormField
@@ -336,24 +356,28 @@ function SubjectIndicator({ subject }: { subject: string }) {
                     name="answer"
                     render={({ field }) => (
                       <FormItem className="space-y-3">
-                        <FormLabel>문제 수</FormLabel>
+                        <FormLabel>정답</FormLabel>
                         <FormControl>
-                          <RadioGroup
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="grid grid-cols-3"
-                          >
-                            {[5, 10, 20, 30, 40, 50].map(
-                              (radioItem) => (
-                                <FormItem className="flex items-center space-x-3 space-y-0">
-                                  <FormControl>
-                                    <RadioGroupItem value={`${radioItem}`} />
-                                  </FormControl>
-                                  <FormLabel className="font-normal">{radioItem} 문제</FormLabel>
-                                </FormItem>
-                              )
-                            )}
-                          </RadioGroup>
+                          {questionList[currentQuestion].questionFormat.includes("객관식") ? (
+                            <RadioGroup
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              className="flex flex-col"
+                            >
+                              {questionList[currentQuestion].choices?.map(
+                                (radioItem) => (
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value={`${radioItem}`} />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">{radioItem}</FormLabel>
+                                  </FormItem>
+                                )
+                              )}
+                            </RadioGroup>
+                          ) : (
+                            <Input placeholder="정답 입력..." {...field} />
+                          )}
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -364,7 +388,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
                   </div>
                 </form>
               </Form>
-            </>
+            </div>
           )}
         </>
       )
