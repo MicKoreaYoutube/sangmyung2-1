@@ -433,13 +433,19 @@ function SubjectIndicator({ subject }: { subject: string }) {
       )
 
     case "역사":
-      return "제작 중..."
+      return (
+        <h1>제작 중...</h1>
+      )
 
     case "과학":
-      return "제작 중..."
+      return (
+        <h1>제작 중...</h1>
+      )
 
     case "기술가정":
-      return "제작 중..."
+      return (
+        <h1>제작 중...</h1>
+      )
 
     default:
       notFound()
