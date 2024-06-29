@@ -73,7 +73,7 @@ export default function ExamDetail({ params }: { params: { subject: string } }) 
             </InView>
             <InView triggerOnce={true} threshold={0.6} delay={4100}>
               {({ inView, ref }) => (
-                <Card ref={ref} className={`animate__animated w-[300px] md:w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
+                <Card ref={ref} className={`animate__animated w-[350px] md:w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
                   <div className="flex justify-end">
                     <Link href="/exam" className={buttonVariants({ variant: "ghost" }) + "font-SUITE-Regular px-2 absolute m-2"}><ChevronRight /></Link>
                   </div>
@@ -242,7 +242,6 @@ function SubjectIndicator({ subject }: { subject: string }) {
         answer: questionFormat == "객관식 - 뜻 맞추기" ? wordList[unit][randomWord] : randomWord
       })
     }
-    console.log(questions)
     setQuestionList(questions)
   }
 
