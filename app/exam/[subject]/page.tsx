@@ -39,6 +39,7 @@ import { InView } from "react-intersection-observer"
 import { useState } from "react"
 
 import { ChevronRight } from "lucide-react"
+import { FieldPath } from "firebase/firestore"
 
 interface questionListType {
   unit: string
@@ -170,6 +171,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
   const [explanation, setExplanation] = useState<string | null>("")
   const [correctCount, addCorrectCount] = useState(0)
   const [questionsCount, setQuestionCount] = useState(0)
+  const [answer, setAnswer] = useState("")
 
   const examSchema = z.object({
     unitName: z.enum(["동백꽃", "양반전", "둘 다"], {
@@ -209,8 +211,8 @@ function SubjectIndicator({ subject }: { subject: string }) {
       const unitKeyList = Object.keys(wordList[unit])
       let randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
       questions.forEach((question) => {
-        while (question.question == randomWord || question.answer == randomWord) {
-          randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
+        while (randomWord == question.question || randomWord == question.answer) {
+          randomWord = "죽어!!"
         }
       })
       let choices: string[] = []
@@ -411,6 +413,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
                         } else {
                           setCurrentQuestion(currentQuestion + 1)
                         }
+                        form2.resetField("answer")
                       }}>다음</Button>
                     ) : (
                       <Button type="submit">제출</Button>
