@@ -72,7 +72,7 @@ export default function ExamDetail({ params }: { params: { subject: string } }) 
                 </p>
               )}
             </InView>
-            <InView triggerOnce={true} threshold={0.6} delay={4100}>
+            <InView triggerOnce={true} threshold={0.4} delay={3000}>
               {({ inView, ref }) => (
                 <Card ref={ref} className={`animate__animated w-[350px] md:w-[500px] ${inView ? 'animate__fadeInUp' : 'invisible'}`}>
                   <div className="flex justify-end">
@@ -171,7 +171,6 @@ function SubjectIndicator({ subject }: { subject: string }) {
   const [explanation, setExplanation] = useState<string | null>("")
   const [correctCount, addCorrectCount] = useState(0)
   const [questionsCount, setQuestionCount] = useState(0)
-  const [answer, setAnswer] = useState("")
 
   const examSchema = z.object({
     unitName: z.enum(["동백꽃", "양반전", "둘 다"], {
@@ -212,7 +211,7 @@ function SubjectIndicator({ subject }: { subject: string }) {
       let randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
       questions.forEach((question) => {
         while (randomWord == question.question || randomWord == question.answer) {
-          randomWord = "죽어!!"
+          randomWord = unitKeyList[Math.floor(Math.random() * unitKeyList.length)]
         }
       })
       let choices: string[] = []
